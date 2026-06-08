@@ -5,9 +5,25 @@
 
 import { getSupabase } from '../config/database'
 import { createError } from '../middleware/errorHandler'
+import { generarPrefijoInstitucion } from '../utils/codigos'
 import type { HabilitarExperienciaDto, AgregarAlumnoDto } from '../models/types'
 
 export const institucionesService = {
+  /** Crea una nueva institución vinculada a un usuario */
+  async crear(userId: string, nombre: string) {
+    const supabase = getSupabase()
+    const prefijo = generarPrefijoInstitucion(nombre)
+
+    const { data, error } = await supabase
+      .from('instituciones')
+      .insert({ nombre, prefijo, creado_por: userId })
+      .select()
+      .single()
+
+    if (error) throw createError(error.message, 500)
+    return data
+  },
+
   /** Obtiene la institución del usuario autenticado */
   async obtenerMia(userId: string) {
     const supabase = getSupabase()

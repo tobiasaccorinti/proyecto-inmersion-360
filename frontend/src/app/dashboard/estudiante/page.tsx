@@ -17,7 +17,6 @@ import { AREAS, NOMBRES_MESES, DIAS_SEMANA } from '@/utils/constants'
 import type { Experiencia, Profile, Inscripcion } from '@/types'
 
 const NAV_ITEMS: NavItem[] = [
-  { id: 'dashboard', label: 'Inicio', icon: '⊞' },
   { id: 'explorar', label: 'Explorar', icon: '◎' },
   { id: 'inscripciones', label: 'Mis inscripciones', icon: '✓' },
   { id: 'calendario', label: 'Calendario', icon: '▦' },
@@ -29,7 +28,7 @@ export default function DashboardEstudiantePage() {
   const [experiencias, setExperiencias] = useState<Experiencia[]>([])
   const [inscripciones, setInscripciones] = useState<Inscripcion[]>([])
   const [loading, setLoading] = useState(true)
-  const [activeNav, setActiveNav] = useState('dashboard')
+  const [activeNav, setActiveNav] = useState('explorar')
   const [token, setToken] = useState<string | null>(null)
   const [seleccionada, setSeleccionada] = useState<Experiencia | null>(null)
   const [inscribiendo, setInscribiendo] = useState(false)
@@ -116,7 +115,7 @@ export default function DashboardEstudiantePage() {
   )
 
   return (
-    <div className="min-h-screen bg-[#EEEFFE] flex" style={{ fontFamily: 'var(--font-body, sans-serif)' }}>
+    <div className="min-h-screen bg-[#EEEFFE] flex flex-col md:flex-row" style={{ fontFamily: 'var(--font-body, sans-serif)' }}>
       {seleccionada && (
         <ExperienciaModal
           experiencia={seleccionada}
@@ -136,25 +135,25 @@ export default function DashboardEstudiantePage() {
         onLogout={handleLogout}
       />
 
-      <main className="flex-1 p-8 overflow-y-auto">
+      <main className="flex-1 p-4 md:p-8 overflow-y-auto w-full">
         {/* Banner bienvenida */}
-        <div className="bg-indigo-600 rounded-2xl p-8 mb-6">
-          <p className="text-indigo-200 text-sm mb-1">Panel de estudiante</p>
-          <h1 style={{ fontFamily: 'var(--font-heading, sans-serif)' }} className="text-3xl font-bold text-white">
+        <div className="bg-indigo-600 rounded-2xl p-6 md:p-8 mb-6 shadow-lg shadow-indigo-100">
+          <p className="text-indigo-200 text-xs md:text-sm mb-1 uppercase font-bold tracking-wider">Panel de estudiante</p>
+          <h1 style={{ fontFamily: 'var(--font-heading, sans-serif)' }} className="text-2xl md:text-3xl font-bold text-white truncate">
             ¡Hola, {profile?.full_name?.split(' ')[0]}! 👋
           </h1>
           <p className="text-indigo-200 mt-2 text-sm">Explorá experiencias y elegí tu camino.</p>
         </div>
 
         {/* Explorar experiencias */}
-        {(activeNav === 'explorar' || activeNav === 'dashboard') && (
-          <div className="bg-white rounded-2xl p-6 border border-gray-100 mb-6">
-            <div className="flex items-center justify-between mb-4">
+        {activeNav === 'explorar' && (
+          <div className="bg-white rounded-2xl p-4 md:p-6 border border-gray-100 mb-6 shadow-sm">
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
               <h2 style={{ fontFamily: 'var(--font-heading, sans-serif)' }} className="text-lg font-bold text-gray-900">
                 Experiencias disponibles
               </h2>
               <select
-                className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 text-gray-600 outline-none"
+                className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 text-gray-600 outline-none bg-gray-50 flex-1 md:flex-none"
                 value={filtroArea}
                 onChange={(e) => setFiltroArea(e.target.value)}
               >
@@ -165,7 +164,7 @@ export default function DashboardEstudiantePage() {
             {expFiltradas.length === 0 ? (
               <p className="text-sm text-gray-400">No hay experiencias disponibles.</p>
             ) : (
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {expFiltradas.map((exp) => (
                   <ExperienciaCard
                     key={exp.id}
@@ -181,14 +180,14 @@ export default function DashboardEstudiantePage() {
 
         {/* Mis inscripciones */}
         {activeNav === 'inscripciones' && (
-          <div className="bg-white rounded-2xl p-6 border border-gray-100">
-            <h2 style={{ fontFamily: 'var(--font-heading, sans-serif)' }} className="text-lg font-bold text-gray-900 mb-4">
+          <div className="bg-white rounded-2xl p-4 md:p-6 border border-gray-100 shadow-sm">
+            <h2 style={{ fontFamily: 'var(--font-heading, sans-serif)' }} className="text-lg font-bold text-gray-900 mb-6">
               Mis inscripciones
             </h2>
             {inscripciones.length === 0 ? (
               <p className="text-sm text-gray-400">Todavía no te inscribiste en ninguna experiencia.</p>
             ) : (
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {inscripciones.map((i) => i.experiencias && (
                   <ExperienciaCard
                     key={i.id}
@@ -204,25 +203,25 @@ export default function DashboardEstudiantePage() {
 
         {/* Calendario */}
         {activeNav === 'calendario' && (
-          <div className="bg-white rounded-2xl p-6 border border-gray-100">
-            <div className="flex items-center justify-between mb-4">
+          <div className="bg-white rounded-2xl p-4 md:p-6 border border-gray-100 shadow-sm">
+            <div className="flex items-center justify-between mb-6">
               <h2 style={{ fontFamily: 'var(--font-heading, sans-serif)' }} className="text-lg font-bold text-gray-900">
                 {NOMBRES_MESES[mes]} {año}
               </h2>
               <div className="flex gap-2">
                 <button
                   onClick={() => setMesCalendario(new Date(año, mes - 1))}
-                  className="text-gray-400 hover:text-gray-700 px-2"
+                  className="w-10 h-10 flex items-center justify-center bg-gray-50 rounded-full text-gray-600 hover:bg-gray-100 transition-colors shadow-sm"
                 >←</button>
                 <button
                   onClick={() => setMesCalendario(new Date(año, mes + 1))}
-                  className="text-gray-400 hover:text-gray-700 px-2"
+                  className="w-10 h-10 flex items-center justify-center bg-gray-50 rounded-full text-gray-600 hover:bg-gray-100 transition-colors shadow-sm"
                 >→</button>
               </div>
             </div>
-            <div className="grid grid-cols-7 gap-1 text-center">
+            <div className="grid grid-cols-7 gap-1 md:gap-2 text-center">
               {DIAS_SEMANA.map((d) => (
-                <div key={d} className="text-xs font-semibold text-gray-400 py-1">{d}</div>
+                <div key={d} className="text-[10px] md:text-xs font-bold text-gray-400 py-1 uppercase tracking-widest">{d}</div>
               ))}
               {Array.from({ length: offsetInicio }).map((_, i) => (
                 <div key={`offset-${i}`} />
@@ -231,10 +230,10 @@ export default function DashboardEstudiantePage() {
                 <div
                   key={dia}
                   className={[
-                    'aspect-square flex items-center justify-center rounded-full text-sm font-medium cursor-default',
-                    esHoy(dia) ? 'bg-indigo-600 text-white' : '',
-                    diasConCharlas.has(dia) && !esHoy(dia) ? 'bg-indigo-100 text-indigo-700 font-bold' : '',
-                    !esHoy(dia) && !diasConCharlas.has(dia) ? 'text-gray-700' : '',
+                    'aspect-square flex items-center justify-center rounded-xl text-xs md:text-sm font-medium transition-all',
+                    esHoy(dia) ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100' : '',
+                    diasConCharlas.has(dia) && !esHoy(dia) ? 'bg-indigo-50 text-indigo-700 font-bold' : '',
+                    !esHoy(dia) && !diasConCharlas.has(dia) ? 'text-gray-700 hover:bg-gray-50' : '',
                   ].join(' ')}
                 >
                   {dia}
@@ -242,14 +241,14 @@ export default function DashboardEstudiantePage() {
               ))}
             </div>
             {proximasInscriptas.length > 0 && (
-              <div className="mt-6 border-t border-gray-100 pt-4">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Próximas charlas</p>
-                <div className="flex flex-col gap-2">
+              <div className="mt-8 border-t border-gray-100 pt-6">
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Próximas experiencias</p>
+                <div className="flex flex-col gap-3">
                   {proximasInscriptas.slice(0, 5).map((e) => (
-                    <div key={e.id} className="flex items-center gap-3 text-sm">
-                      <span className="w-2 h-2 rounded-full bg-indigo-500 flex-shrink-0" />
-                      <span className="text-gray-700 font-medium">{e.titulo}</span>
-                      <span className="text-gray-400 ml-auto">{new Date(e.fecha).toLocaleDateString('es-AR', { day: 'numeric', month: 'short' })}</span>
+                    <div key={e.id} className="flex items-center gap-3 text-sm p-3 rounded-xl bg-gray-50/50">
+                      <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 flex-shrink-0" />
+                      <span className="text-gray-700 font-semibold truncate">{e.titulo}</span>
+                      <span className="text-gray-400 ml-auto text-xs whitespace-nowrap">{new Date(e.fecha).toLocaleDateString('es-AR', { day: 'numeric', month: 'short' })}</span>
                     </div>
                   ))}
                 </div>

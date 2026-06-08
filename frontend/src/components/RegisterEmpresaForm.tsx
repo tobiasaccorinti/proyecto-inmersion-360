@@ -1,19 +1,16 @@
 'use client'
 
-/**
- * Formulario de inicio de sesión.
- * Consume el backend via authService y guarda el JWT en localStorage.
- */
-
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { authService } from '../services/authService'
 import { useFormState } from '../hooks/useFormState'
 
-export function LoginForm() {
+export function RegisterEmpresaForm() {
   const router = useRouter()
   const { loading, error, run } = useFormState()
+
+  const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -21,12 +18,14 @@ export function LoginForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     await run(async () => {
-      const { token, profile } = await authService.login({ email, password })
+      const { token } = await authService.register({
+        email,
+        password,
+        fullName, // En el backend este se usa como nombre de empresa
+        role: 'empresa',
+      })
       localStorage.setItem('inspira_token', token)
-      // Redirigir según rol
-      if (profile.role === 'estudiante') router.push('/dashboard/estudiante')
-      else if (profile.role === 'empresa') router.push('/dashboard/empresa')
-      else router.push('/dashboard/institucion')
+      router.push('/dashboard/empresa')
     })
   }
 
@@ -35,21 +34,14 @@ export function LoginForm() {
 
   return (
     <div className="w-full max-w-md">
-      <Link
-        href="/"
-        className="inline-flex items-center text-sm text-gray-400 hover:text-indigo-600 mb-6 transition-colors group"
-      >
-        <span className="mr-2 group-hover:-translate-x-1 transition-transform">←</span>
-        Volver al inicio
-      </Link>
       <div className="mb-8">
         <h1
           style={{ fontFamily: 'var(--font-heading, sans-serif)' }}
           className="text-3xl font-bold text-gray-900 mb-2"
         >
-          Iniciar sesión
+          Cuenta de Empresa
         </h1>
-        <p className="text-gray-500">Ingresá a tu cuenta de Inspira</p>
+        <p className="text-gray-500">Compartí tu experiencia con la próxima generación.</p>
       </div>
 
       {error && (
@@ -60,13 +52,24 @@ export function LoginForm() {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
-          <label className="text-sm font-semibold text-gray-700 block mb-1.5">Email</label>
+          <label className="text-sm font-semibold text-gray-700 block mb-1.5">Nombre de la empresa / Profesional</label>
+          <input
+            className={inputClass}
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            placeholder="Globant / Juan Pérez Arq."
+            required
+          />
+        </div>
+
+        <div>
+          <label className="text-sm font-semibold text-gray-700 block mb-1.5">Email de contacto</label>
           <input
             className={inputClass}
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="tu@email.com"
+            placeholder="empresa@contacto.com"
             required
           />
         </div>
@@ -79,7 +82,8 @@ export function LoginForm() {
               type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
+              placeholder="Mínimo 6 caracteres"
+              minLength={6}
               required
             />
             <button
@@ -95,18 +99,18 @@ export function LoginForm() {
         <button
           type="submit"
           disabled={loading}
-          className="mt-2 w-full bg-indigo-600 text-white font-semibold py-3.5 rounded-xl hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+          className="w-full bg-indigo-600 text-white font-semibold py-3.5 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50 mt-2"
         >
-          {loading ? 'Ingresando...' : 'Ingresar →'}
+          {loading ? 'Creando cuenta...' : 'Crear perfil de empresa'}
         </button>
-      </form>
 
-      <p className="text-sm text-gray-500 text-center mt-6">
-        ¿No tenés cuenta?{' '}
-        <Link href="/auth/register" className="text-indigo-600 font-semibold hover:underline">
-          Registrate gratis
-        </Link>
-      </p>
+        <p className="text-sm text-gray-500 text-center mt-6">
+          ¿Ya tenés cuenta?{' '}
+          <Link href="/auth/login" className="text-indigo-600 font-semibold hover:underline">
+            Iniciá sesión
+          </Link>
+        </p>
+      </form>
     </div>
   )
 }

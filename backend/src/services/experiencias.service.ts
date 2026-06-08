@@ -44,14 +44,26 @@ export const experienciasService = {
   /** Crea una nueva experiencia. Solo accesible para el rol `empresa`. */
   async crear(userId: string, empresaNombre: string, dto: CreateExperienciaDto) {
     const supabase = getSupabase()
+    
+    // Aseguramos que los campos coincidan con la DB
+    const insertData = {
+      titulo: dto.titulo,
+      descripcion: dto.descripcion,
+      area: dto.area,
+      modalidad: dto.modalidad,
+      fecha: dto.fecha,
+      duracion_minutos: dto.duracion_minutos,
+      cupos_totales: dto.cupos_totales,
+      anios_recomendados: dto.anios_recomendados,
+      url_grabacion: dto.url_grabacion,
+      empresa: empresaNombre,
+      estado: 'publicada',
+      creado_por: userId,
+    }
+
     const { data, error } = await supabase
       .from('experiencias')
-      .insert({
-        ...dto,
-        empresa: empresaNombre,
-        estado: 'publicada',
-        creado_por: userId,
-      })
+      .insert(insertData)
       .select()
       .single()
 

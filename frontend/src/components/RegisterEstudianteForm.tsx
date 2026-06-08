@@ -1,32 +1,33 @@
 'use client'
 
-/**
- * Formulario de inicio de sesión.
- * Consume el backend via authService y guarda el JWT en localStorage.
- */
-
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { authService } from '../services/authService'
 import { useFormState } from '../hooks/useFormState'
 
-export function LoginForm() {
+export function RegisterEstudianteForm() {
   const router = useRouter()
   const { loading, error, run } = useFormState()
+
+  const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [codigoAlumno, setCodigoAlumno] = useState('')
   const [showPassword, setShowPassword] = useState(false)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     await run(async () => {
-      const { token, profile } = await authService.login({ email, password })
+      const { token } = await authService.register({
+        email,
+        password,
+        fullName,
+        role: 'estudiante',
+        codigoAlumno,
+      })
       localStorage.setItem('inspira_token', token)
-      // Redirigir según rol
-      if (profile.role === 'estudiante') router.push('/dashboard/estudiante')
-      else if (profile.role === 'empresa') router.push('/dashboard/empresa')
-      else router.push('/dashboard/institucion')
+      router.push('/dashboard/estudiante')
     })
   }
 
@@ -35,21 +36,14 @@ export function LoginForm() {
 
   return (
     <div className="w-full max-w-md">
-      <Link
-        href="/"
-        className="inline-flex items-center text-sm text-gray-400 hover:text-indigo-600 mb-6 transition-colors group"
-      >
-        <span className="mr-2 group-hover:-translate-x-1 transition-transform">←</span>
-        Volver al inicio
-      </Link>
       <div className="mb-8">
         <h1
           style={{ fontFamily: 'var(--font-heading, sans-serif)' }}
           className="text-3xl font-bold text-gray-900 mb-2"
         >
-          Iniciar sesión
+          ¡Hola Estudiante!
         </h1>
-        <p className="text-gray-500">Ingresá a tu cuenta de Inspira</p>
+        <p className="text-gray-500">Completá tus datos para empezar a explorar.</p>
       </div>
 
       {error && (
@@ -59,6 +53,17 @@ export function LoginForm() {
       )}
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <div>
+          <label className="text-sm font-semibold text-gray-700 block mb-1.5">Nombre completo</label>
+          <input
+            className={inputClass}
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            placeholder="Juan Pérez"
+            required
+          />
+        </div>
+
         <div>
           <label className="text-sm font-semibold text-gray-700 block mb-1.5">Email</label>
           <input
@@ -72,6 +77,18 @@ export function LoginForm() {
         </div>
 
         <div>
+          <label className="text-sm font-semibold text-gray-700 block mb-1.5">Código de alumno</label>
+          <input
+            className={inputClass}
+            value={codigoAlumno}
+            onChange={(e) => setCodigoAlumno(e.target.value)}
+            placeholder="INST-XXXX-XXXX"
+            required
+          />
+          <p className="text-xs text-gray-400 mt-1">Pedíselo a tu institución educativa.</p>
+        </div>
+
+        <div>
           <label className="text-sm font-semibold text-gray-700 block mb-1.5">Contraseña</label>
           <div className="relative">
             <input
@@ -79,7 +96,8 @@ export function LoginForm() {
               type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
+              placeholder="Mínimo 6 caracteres"
+              minLength={6}
               required
             />
             <button
@@ -95,18 +113,18 @@ export function LoginForm() {
         <button
           type="submit"
           disabled={loading}
-          className="mt-2 w-full bg-indigo-600 text-white font-semibold py-3.5 rounded-xl hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+          className="w-full bg-indigo-600 text-white font-semibold py-3.5 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50 mt-2"
         >
-          {loading ? 'Ingresando...' : 'Ingresar →'}
+          {loading ? 'Creando cuenta...' : 'Registrarme como estudiante'}
         </button>
-      </form>
 
-      <p className="text-sm text-gray-500 text-center mt-6">
-        ¿No tenés cuenta?{' '}
-        <Link href="/auth/register" className="text-indigo-600 font-semibold hover:underline">
-          Registrate gratis
-        </Link>
-      </p>
+        <p className="text-sm text-gray-500 text-center mt-6">
+          ¿Ya tenés cuenta?{' '}
+          <Link href="/auth/login" className="text-indigo-600 font-semibold hover:underline">
+            Iniciá sesión
+          </Link>
+        </p>
+      </form>
     </div>
   )
 }

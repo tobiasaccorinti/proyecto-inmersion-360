@@ -17,7 +17,6 @@ import { AREAS, MODALIDADES } from '@/utils/constants'
 import type { Experiencia, Profile, Institucion, CodigoAlumno } from '@/types'
 
 const NAV_ITEMS: NavItem[] = [
-  { id: 'dashboard', label: 'Dashboard', icon: '⊞' },
   { id: 'experiencias', label: 'Experiencias', icon: '◎' },
   { id: 'codigos', label: 'Códigos', icon: '🔑' },
   { id: 'alumnos', label: 'Alumnos', icon: '🎓' },
@@ -31,7 +30,7 @@ export default function DashboardInstitucionPage() {
   const [experienciasDisponibles, setExperienciasDisponibles] = useState<Experiencia[]>([])
   const [habilitadas, setHabilitadas] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
-  const [activeNav, setActiveNav] = useState('dashboard')
+  const [activeNav, setActiveNav] = useState('experiencias')
   const [token, setToken] = useState<string | null>(null)
   const [seleccionada, setSeleccionada] = useState<Experiencia | null>(null)
   const [filtroArea, setFiltroArea] = useState('')
@@ -139,18 +138,18 @@ export default function DashboardInstitucionPage() {
     'w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all'
 
   return (
-    <div className="min-h-screen bg-[#EEEFFE] flex" style={{ fontFamily: 'var(--font-body, sans-serif)' }}>
+    <div className="min-h-screen bg-[#EEEFFE] flex flex-col md:flex-row" style={{ fontFamily: 'var(--font-body, sans-serif)' }}>
       {/* Modal habilitar/deshabilitar experiencia */}
       {seleccionada && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-6">
-          <div className="bg-white rounded-2xl w-full max-w-md shadow-xl p-6">
+          <div className="bg-white rounded-2xl w-full max-w-sm shadow-xl p-6">
             <h2
               style={{ fontFamily: 'var(--font-heading, sans-serif)' }}
-              className="text-lg font-bold text-gray-900 mb-2"
+              className="text-lg font-bold text-gray-900 mb-2 truncate"
             >
               {seleccionada.titulo}
             </h2>
-            <p className="text-sm text-gray-500 mb-4">
+            <p className="text-sm text-gray-500 mb-4 truncate">
               {seleccionada.empresa} · {seleccionada.area} · {seleccionada.modalidad}
             </p>
             {!habilitadas.includes(seleccionada.id) ? (
@@ -210,11 +209,11 @@ export default function DashboardInstitucionPage() {
         onLogout={handleLogout}
       />
 
-      <main className="flex-1 p-8 overflow-y-auto">
+      <main className="flex-1 p-4 md:p-8 overflow-y-auto w-full">
         {/* Banner */}
-        <div className="bg-indigo-600 rounded-2xl p-8 mb-6">
-          <p className="text-indigo-200 text-sm mb-1">Panel de institución</p>
-          <h1 style={{ fontFamily: 'var(--font-heading, sans-serif)' }} className="text-3xl font-bold text-white">
+        <div className="bg-indigo-600 rounded-2xl p-6 md:p-8 mb-6">
+          <p className="text-indigo-200 text-xs md:text-sm mb-1 uppercase font-bold tracking-wider">Panel de institución</p>
+          <h1 style={{ fontFamily: 'var(--font-heading, sans-serif)' }} className="text-2xl md:text-3xl font-bold text-white truncate">
             {institucion?.nombre ?? profile?.full_name} 🏫
           </h1>
           <p className="text-indigo-200 mt-2 text-sm">
@@ -223,31 +222,31 @@ export default function DashboardInstitucionPage() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 text-center sm:text-left">
           {[
             { label: 'Códigos generados', value: codigos.length },
             { label: 'Códigos usados', value: codigosUsados },
             { label: 'Experiencias habilitadas', value: habilitadas.length },
           ].map((s) => (
-            <div key={s.label} className="bg-white rounded-2xl p-5 border border-gray-100">
-              <p style={{ fontFamily: 'var(--font-heading, sans-serif)' }} className="text-2xl font-bold text-gray-900">
+            <div key={s.label} className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+              <p style={{ fontFamily: 'var(--font-heading, sans-serif)' }} className="text-xl md:text-2xl font-bold text-gray-900">
                 {s.value}
               </p>
-              <p className="text-sm text-gray-400 mt-0.5">{s.label}</p>
+              <p className="text-xs md:text-sm text-gray-400 mt-0.5">{s.label}</p>
             </div>
           ))}
         </div>
 
         {/* Gestión de experiencias */}
-        {(activeNav === 'experiencias' || activeNav === 'dashboard') && (
-          <div className="bg-white rounded-2xl p-6 border border-gray-100 mb-6">
-            <div className="flex items-center justify-between mb-4">
+        {activeNav === 'experiencias' && (
+          <div className="bg-white rounded-2xl p-4 md:p-6 border border-gray-100 mb-6 shadow-sm">
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
               <h2 style={{ fontFamily: 'var(--font-heading, sans-serif)' }} className="text-lg font-bold text-gray-900">
-                {activeNav === 'dashboard' ? 'Experiencias disponibles' : 'Gestión de experiencias'}
+                Gestión de experiencias
               </h2>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <select
-                  className="text-sm border border-gray-200 rounded-lg px-3 py-1.5"
+                  className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-gray-50 flex-1 md:flex-none"
                   value={filtroArea}
                   onChange={(e) => setFiltroArea(e.target.value)}
                 >
@@ -255,7 +254,7 @@ export default function DashboardInstitucionPage() {
                   {AREAS.map((a) => <option key={a}>{a}</option>)}
                 </select>
                 <select
-                  className="text-sm border border-gray-200 rounded-lg px-3 py-1.5"
+                  className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-gray-50 flex-1 md:flex-none"
                   value={filtroModalidad}
                   onChange={(e) => setFiltroModalidad(e.target.value)}
                 >
@@ -264,12 +263,12 @@ export default function DashboardInstitucionPage() {
                 </select>
               </div>
             </div>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {expFiltradas.map((exp) => (
                 <div key={exp.id} className="relative">
                   <ExperienciaCard experiencia={exp} mostrarEstado onClick={setSeleccionada} />
                   {habilitadas.includes(exp.id) && (
-                    <div className="absolute top-2 left-2 bg-green-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                    <div className="absolute top-2 left-2 bg-indigo-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-tighter">
                       Habilitada
                     </div>
                   )}
@@ -281,16 +280,16 @@ export default function DashboardInstitucionPage() {
 
         {/* Generar códigos */}
         {activeNav === 'codigos' && (
-          <div className="bg-white rounded-2xl p-6 border border-gray-100">
+          <div className="bg-white rounded-2xl p-4 md:p-6 border border-gray-100 shadow-sm">
             <h2 style={{ fontFamily: 'var(--font-heading, sans-serif)' }} className="text-lg font-bold text-gray-900 mb-4">
               Generar códigos de alumno
             </h2>
-            <div className="flex gap-3 items-end mb-6">
-              <div>
+            <div className="flex flex-col sm:flex-row gap-3 items-end mb-8">
+              <div className="w-full sm:w-32">
                 <label className="text-sm font-semibold text-gray-700 block mb-1.5">Cantidad</label>
                 <input
                   type="number"
-                  className={`${inputClass} w-32`}
+                  className={inputClass}
                   value={cantidad}
                   min={1}
                   max={200}
@@ -299,31 +298,31 @@ export default function DashboardInstitucionPage() {
               </div>
               <button
                 onClick={handleGenerarCodigos}
-                className="bg-indigo-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-indigo-700"
+                className="w-full sm:w-auto bg-indigo-600 text-white text-sm font-semibold px-6 py-2.5 rounded-xl hover:bg-indigo-700"
               >
                 Generar →
               </button>
             </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+            <div className="overflow-x-auto -mx-4 md:mx-0">
+              <table className="w-full text-sm min-w-[500px]">
                 <thead>
                   <tr className="border-b border-gray-100">
-                    <th className="text-left py-2 text-gray-500 font-semibold">Código</th>
-                    <th className="text-left py-2 text-gray-500 font-semibold">Alumno</th>
-                    <th className="text-left py-2 text-gray-500 font-semibold">Email</th>
-                    <th className="text-left py-2 text-gray-500 font-semibold">Estado</th>
+                    <th className="text-left px-4 py-2 text-gray-400 font-bold uppercase text-[10px] tracking-widest">Código</th>
+                    <th className="text-left px-4 py-2 text-gray-400 font-bold uppercase text-[10px] tracking-widest">Alumno</th>
+                    <th className="text-left px-4 py-2 text-gray-400 font-bold uppercase text-[10px] tracking-widest">Email</th>
+                    <th className="text-left px-4 py-2 text-gray-400 font-bold uppercase text-[10px] tracking-widest">Estado</th>
                   </tr>
                 </thead>
                 <tbody>
                   {codigos.map((c) => (
-                    <tr key={c.id} className="border-b border-gray-50">
-                      <td className="py-2 font-mono text-gray-800">{c.codigo}</td>
-                      <td className="py-2 text-gray-600">{c.nombre_alumno ?? '—'}</td>
-                      <td className="py-2 text-gray-600">{c.email_alumno ?? '—'}</td>
-                      <td className="py-2">
+                    <tr key={c.id} className="border-b border-gray-50 hover:bg-gray-50">
+                      <td className="px-4 py-3 font-mono text-indigo-600 font-bold">{c.codigo}</td>
+                      <td className="px-4 py-3 text-gray-700">{c.nombre_alumno ?? '—'}</td>
+                      <td className="px-4 py-3 text-gray-500">{c.email_alumno ?? '—'}</td>
+                      <td className="px-4 py-3">
                         <span
-                          className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                            c.usado ? 'bg-green-50 text-green-600' : 'bg-gray-50 text-gray-500'
+                          className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
+                            c.usado ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
                           }`}
                         >
                           {c.usado ? 'Usado' : 'Disponible'}
@@ -339,7 +338,7 @@ export default function DashboardInstitucionPage() {
 
         {/* Agregar alumno */}
         {activeNav === 'alumnos' && (
-          <div className="bg-white rounded-2xl p-6 border border-gray-100">
+          <div className="bg-white rounded-2xl p-4 md:p-6 border border-gray-100 shadow-sm">
             <h2 style={{ fontFamily: 'var(--font-heading, sans-serif)' }} className="text-lg font-bold text-gray-900 mb-4">
               Agregar alumno
             </h2>
@@ -378,13 +377,14 @@ export default function DashboardInstitucionPage() {
               <button
                 type="submit"
                 disabled={agLoading}
-                className="bg-indigo-600 text-white text-sm font-semibold py-3 rounded-xl hover:bg-indigo-700 disabled:opacity-50"
+                className="bg-indigo-600 text-white text-sm font-semibold py-3.5 rounded-xl hover:bg-indigo-700 disabled:opacity-50 transition-colors shadow-lg shadow-indigo-100"
               >
                 {agLoading ? 'Agregando...' : 'Agregar alumno y generar código →'}
               </button>
             </form>
           </div>
         )}
+
       </main>
     </div>
   )

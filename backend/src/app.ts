@@ -14,6 +14,7 @@ import experienciasRoutes from './routes/experiencias.routes'
 import institucionesRoutes from './routes/instituciones.routes'
 import inscripcionesRoutes from './routes/inscripciones.routes'
 import codigosRoutes from './routes/codigos.routes'
+import publicRoutes from './routes/public.routes'
 
 // Middleware
 import { errorHandler } from './middleware/errorHandler'
@@ -43,6 +44,7 @@ app.use('/api/experiencias', experienciasRoutes)
 app.use('/api/instituciones', institucionesRoutes)
 app.use('/api/inscripciones', inscripcionesRoutes)
 app.use('/api/codigos', codigosRoutes)
+app.use('/api/public', publicRoutes)
 
 // ── Manejo de errores global ──────────────────────────────────────────────────
 app.use(errorHandler)

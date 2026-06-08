@@ -13,6 +13,7 @@ import { Router } from 'express'
 import {
   institucionesController,
   agregarAlumnoValidation,
+  crearInstitucionValidation,
 } from '../controllers/instituciones.controller'
 import { authenticate } from '../middleware/auth'
 import { requireRole } from '../middleware/roles'
@@ -20,6 +21,7 @@ import { requireRole } from '../middleware/roles'
 const router = Router()
 const guard = [authenticate, requireRole('institucion')]
 
+router.post('/', authenticate, crearInstitucionValidation, institucionesController.crear)
 router.get('/mia', ...guard, institucionesController.obtenerMia)
 router.get('/mia/alumnos', ...guard, institucionesController.listarAlumnos)
 router.post('/mia/alumnos', ...guard, agregarAlumnoValidation, institucionesController.agregarAlumno)

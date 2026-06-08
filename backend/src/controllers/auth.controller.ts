@@ -14,6 +14,7 @@ export const registerValidation = [
   body('password').isLength({ min: 6 }).withMessage('La contraseña debe tener al menos 6 caracteres'),
   body('fullName').notEmpty().withMessage('El nombre completo es requerido'),
   body('role').isIn(['estudiante', 'empresa', 'institucion']).withMessage('Rol inválido'),
+  body('nombreInstitucion').if(body('role').equals('institucion')).notEmpty().withMessage('El nombre de la institución es requerido'),
 ]
 
 export const loginValidation = [

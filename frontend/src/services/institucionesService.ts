@@ -17,6 +17,11 @@ export interface HabilitarExperienciaPayload {
 }
 
 export const institucionesService = {
+  /** Crea una nueva institución */
+  async crear(nombre: string, token: string): Promise<Institucion> {
+    return apiRequest<Institucion>('/instituciones', { method: 'POST', body: { nombre }, token })
+  },
+
   /** Obtiene los datos de mi institución */
   async obtenerMia(token: string): Promise<Institucion> {
     return apiRequest<Institucion>('/instituciones/mia', { token })

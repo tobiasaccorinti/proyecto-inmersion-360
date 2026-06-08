@@ -49,7 +49,7 @@ export function CrearExperienciaForm({ token, onCreated }: CrearExperienciaFormP
   const labelClass = 'text-sm font-semibold text-gray-700 block mb-1.5'
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-2xl p-6 border border-gray-100">
+    <form onSubmit={handleSubmit} className="bg-white rounded-2xl p-4 md:p-6 border border-gray-100">
       <h2
         style={{ fontFamily: 'var(--font-heading, sans-serif)' }}
         className="text-lg font-bold text-gray-900 mb-6"
@@ -68,8 +68,8 @@ export function CrearExperienciaForm({ token, onCreated }: CrearExperienciaFormP
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-4">
-        <div className="col-span-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="sm:col-span-2">
           <label className={labelClass}>Título *</label>
           <input
             className={inputClass}
@@ -80,7 +80,7 @@ export function CrearExperienciaForm({ token, onCreated }: CrearExperienciaFormP
           />
         </div>
 
-        <div className="col-span-2">
+        <div className="sm:col-span-2">
           <label className={labelClass}>Descripción</label>
           <textarea
             className={`${inputClass} min-h-[80px] resize-none`}
@@ -151,7 +151,7 @@ export function CrearExperienciaForm({ token, onCreated }: CrearExperienciaFormP
           />
         </div>
 
-        <div className="col-span-2">
+        <div className="sm:col-span-2">
           <label className={labelClass}>URL de grabación (opcional)</label>
           <input
             type="url"

@@ -11,7 +11,22 @@ export const agregarAlumnoValidation = [
   body('email').isEmail().withMessage('Email inválido'),
 ]
 
+export const crearInstitucionValidation = [
+  body('nombre').notEmpty().withMessage('El nombre es requerido'),
+]
+
 export const institucionesController = {
+  async crear(req: Request, res: Response, next: NextFunction) {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) { res.status(400).json({ errors: errors.array() }); return }
+    try {
+      const data = await institucionesService.crear(req.user!.sub, req.body.nombre)
+      res.status(201).json(data)
+    } catch (err) {
+      next(err)
+    }
+  },
+
   async obtenerMia(req: Request, res: Response, next: NextFunction) {
     try {
       const data = await institucionesService.obtenerMia(req.user!.sub)

@@ -27,12 +27,6 @@ export const codigosService = {
     const { data, error } = await supabase.from('codigos_alumno').insert(nuevos).select()
     if (error) throw createError(error.message, 500)
 
-    // Actualizar contador
-    await supabase.rpc('increment_codigos_generados', {
-      inst_id: institucionId,
-      cantidad,
-    })
-
     return data
   },
 
