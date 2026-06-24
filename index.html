@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Inspira - MVP actualizado</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#landing" aria-label="Inicio Inspira">
+          <span class="brand-mark">I</span>
+          <span>Inspira</span>
+        </a>
+        <nav class="topnav" aria-label="Navegacion principal">
+          <a href="#experiencias">Experiencias</a>
+          <a href="#estudiante">Estudiantes</a>
+          <a href="#institucion">Instituciones</a>
+          <a href="#empresa">Empresas</a>
+        </nav>
+        <div class="top-actions">
+          <button class="ghost-button" data-route="onboarding">Ingresar</button>
+          <button class="primary-button" data-route="experiencias">Explorar</button>
+        </div>
+      </header>
+
+      <main id="app"></main>
+    </div>
+
+    <template id="landing-template">
+      <section class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">Orientacion vocacional con experiencias reales</span>
+          <h1>Acercamos el mundo profesional a cada estudiante</h1>
+          <p>
+            Inspira conecta estudiantes secundarios con empresas y profesionales mediante charlas,
+            talleres y encuentros elegidos segun sus intereses.
+          </p>
+          <div class="hero-actions">
+            <button class="primary-button large" data-route="experiencias">Explorar experiencias</button>
+            <button class="secondary-button large" data-route="crear-experiencia">Ofrecer una experiencia</button>
+            <button class="ghost-button large" data-route="sumar-institucion">Soy institucion</button>
+          </div>
+          <div class="trust-row" aria-label="Metricas de impacto">
+            <div><strong>120+</strong><span>experiencias</span></div>
+            <div><strong>4.500+</strong><span>estudiantes</span></div>
+            <div><strong>25</strong><span>empresas aliadas</span></div>
+          </div>
+        </div>
+        <div class="hero-product" aria-label="Vista previa de la plataforma">
+          <div class="hero-image-card">
+            <img
+              alt="Profesional conversando con estudiantes secundarios en una experiencia vocacional"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCcTDHvgchDJSwNIZkmFwHkRC110T4E4NYQNRBAfS0z8VPH-pXg4xyKuwStCmx8e_HGiVy9uOFFNqpaxu9Bn8bdzc8GE4pwnT25Y9ADISKKbsPAYhuDCR1gHOoWKtX18dUwbV_XK3yLKBIgXSdZTMPrj7UdA0h7_c6A5_Y2YQBLxWoQT43MKrF6SBCDo2VXaNzN6aBDmxTAjiZb0aww03-_tz19bIySSqIYGC-IzI375r_V_K_Ls9unSH-eN-VwB66DnYdYGP5lJpx"
+            />
+          </div>
+          <div class="floating-note">
+            <span class="icon-dot">+</span>
+            <div>
+              <strong>Experiencia abierta</strong>
+              <span>Diseño UX/UI · segun interes</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <span class="eyebrow">Como funciona</span>
+          <h2>De charlas impuestas a experiencias elegidas por interes</h2>
+          <p>La escuela acompaña, pero el estudiante recupera agencia sobre lo que quiere explorar.</p>
+        </div>
+        <div class="steps-grid">
+          <article class="step-card">
+            <span class="step-number">01</span>
+            <h3>Empresas y profesionales publican experiencias</h3>
+            <p>Charlas, talleres y visitas con cupos, modalidad, nivel y años recomendados.</p>
+          </article>
+          <article class="step-card">
+            <span class="step-number">02</span>
+            <h3>Estudiantes exploran por intereses</h3>
+            <p>Tecnologia, salud, oficios, diseño, finanzas, ambiente, comunicacion y mas.</p>
+          </article>
+          <article class="step-card">
+            <span class="step-number">03</span>
+            <h3>La institucion coordina y acompaña</h3>
+            <p>Habilita experiencias, reserva cupos y sigue participacion e impacto educativo.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section band">
+        <div class="role-grid">
+          <article>
+            <span class="role-icon">ES</span>
+            <h3>Estudiantes</h3>
+            <p>Descubren areas, se inscriben, guardan experiencias y reciben certificados.</p>
+          </article>
+          <article>
+            <span class="role-icon">IN</span>
+            <h3>Instituciones</h3>
+            <p>Coordinan oportunidades, recomiendan experiencias y ven intereses vocacionales.</p>
+          </article>
+          <article>
+            <span class="role-icon">PR</span>
+            <h3>Profesionales</h3>
+            <p>Ofrecen experiencias con kits prearmados y reciben feedback de impacto.</p>
+          </article>
+          <article>
+            <span class="role-icon">EM</span>
+            <h3>Empresas</h3>
+            <p>Gestionan voluntarios, miden impacto social y fortalecen marca empleadora.</p>
+          </article>
+        </div>
+      </section>
+    </template>
+
+    <template id="onboarding-template">
+      <section class="page-header">
+        <span class="eyebrow">Seleccion de rol</span>
+        <h1>Elegir como queres usar Inspira</h1>
+        <p>El MVP se adapta al rol para mostrar solo las acciones necesarias.</p>
+      </section>
+      <section class="role-select-grid">
+        <article class="select-card" data-route="estudiante">
+          <span class="role-icon">ES</span>
+          <h2>Estudiante</h2>
+          <p>Explora experiencias segun tus intereses, anotate y segui tu recorrido vocacional.</p>
+          <button class="primary-button">Continuar</button>
+        </article>
+        <article class="select-card" data-route="institucion">
+          <span class="role-icon">IN</span>
+          <h2>Institucion / Escuela</h2>
+          <p>Habilita experiencias, coordina cupos y acompaña a tus estudiantes.</p>
+          <button class="primary-button">Continuar</button>
+        </article>
+        <article class="select-card" data-route="profesional">
+          <span class="role-icon">PR</span>
+          <h2>Profesional voluntario</h2>
+          <p>Ofrece charlas o talleres y usa kits para preparar encuentros simples.</p>
+          <button class="primary-button">Continuar</button>
+        </article>
+        <article class="select-card" data-route="empresa">
+          <span class="role-icon">EM</span>
+          <h2>Empresa</h2>
+          <p>Publica experiencias, invita empleados y mide impacto social educativo.</p>
+          <button class="primary-button">Continuar</button>
+        </article>
+      </section>
+    </template>
+
+    <template id="experiencias-template">
+      <section class="catalog-hero">
+        <span class="eyebrow">Catalogo de experiencias</span>
+        <h1>Descubri tu futuro profesional</h1>
+        <p>Explora experiencias reales elegidas por tu interes y conecta con empresas, profesionales y estudiantes de otras instituciones.</p>
+        <div class="search-shell">
+          <span>⌕</span>
+          <input placeholder="Que area profesional te apasiona?" />
+          <button class="primary-button">Buscar</button>
+        </div>
+      </section>
+      <section class="catalog-layout">
+        <aside class="filter-panel">
+          <h2>Filtros</h2>
+          <label>Area
+            <select id="area-filter">
+              <option value="Todas">Todas</option>
+              <option value="Tecnologia">Tecnologia</option>
+              <option value="Diseño">Diseño</option>
+              <option value="Salud">Salud</option>
+              <option value="Finanzas">Finanzas</option>
+              <option value="Ambiente">Ambiente</option>
+            </select>
+          </label>
+          <label>Modalidad
+            <select id="mode-filter">
+              <option value="Todas">Todas</option>
+              <option value="Virtual">Virtual</option>
+              <option value="Presencial">Presencial</option>
+              <option value="Hibrida">Hibrida</option>
+            </select>
+          </label>
+          <label>Tipo
+            <select id="type-filter">
+              <option value="Todas">Todas</option>
+              <option value="Interinstitucional">Interinstitucional</option>
+              <option value="Compartida">Compartida</option>
+              <option value="Exclusiva">Exclusiva</option>
+            </select>
+          </label>
+          <div class="interest-list">
+            <span>Tecnologia</span>
+            <span>Emprendimiento</span>
+            <span>Diseño UX</span>
+            <span>Salud</span>
+            <span>Oficios</span>
+          </div>
+        </aside>
+        <div>
+          <div class="toolbar">
+            <div>
+              <strong id="result-count">0 experiencias</strong>
+              <span>disponibles para explorar</span>
+            </div>
+            <button class="secondary-button" data-route="crear-experiencia">Crear experiencia</button>
+          </div>
+          <div class="experience-grid" id="experience-grid"></div>
+        </div>
+      </section>
+    </template>
+
+    <template id="detalle-template">
+      <section class="detail-page">
+        <div class="detail-breadcrumb">Programas <span>›</span> Experiencias activas <span>›</span> Detalle de experiencia</div>
+        <div class="detail-top">
+          <div>
+            <h1 id="detail-title">Detalle de experiencia</h1>
+            <p><span class="inline-icon">⌾</span> Organizada por <b id="detail-host">Empresa</b> · Impacto educativo</p>
+          </div>
+          <div class="detail-actions">
+            <span class="confirm-pill">Confirmada</span>
+            <button class="secondary-button">Ver inscriptos</button>
+            <button class="secondary-button">Descargar certificado</button>
+          </div>
+        </div>
+
+        <div class="detail-meta-row">
+          <article><span class="meta-icon blue">□</span><div><small>Fecha y hora</small><b id="detail-date">12 de junio</b></div></article>
+          <article><span class="meta-icon violet">◇</span><div><small>Modalidad</small><b id="detail-mode">Virtual</b></div></article>
+          <article><span class="meta-icon teal">♙</span><div><small>Tipo</small><b id="detail-type">Interinstitucional</b></div></article>
+        </div>
+
+        <section class="detail-layout">
+          <div class="detail-main-column">
+            <article class="panel detail-main">
+              <h2><span class="section-icon">▤</span> Descripcion de la experiencia</h2>
+              <p id="detail-description">Descripcion de la experiencia.</p>
+              <p>Los estudiantes podran conocer roles reales, trayectorias posibles y desafios concretos de esta industria. La experiencia esta pensada para quienes se anotan por interes, no por curso obligatorio.</p>
+            </article>
+
+            <article class="panel detail-main">
+              <h2><span class="section-icon">◎</span> Objetivos de aprendizaje</h2>
+              <ul class="objective-list">
+                <li>Identificar aplicaciones reales del area profesional y sus salidas laborales.</li>
+                <li>Comprender como trabaja un equipo profesional en proyectos concretos.</li>
+                <li>Explorar caminos de formacion recomendados despues de la secundaria.</li>
+              </ul>
+            </article>
+
+            <article class="panel detail-main">
+              <h2><span class="section-icon">◌</span> Intereses e instituciones</h2>
+              <div class="interest-list" id="detail-tags"></div>
+              <div class="institution-chips" id="detail-institutions"></div>
+            </article>
+          </div>
+
+          <aside class="detail-sidebar">
+            <article class="enrollment-card">
+              <span class="status-badge green">Inscripcion abierta</span>
+              <h2>Reservar mi lugar</h2>
+              <p id="detail-enrollment-copy">18 de 100 cupos disponibles. Participan estudiantes de 4 instituciones.</p>
+              <div class="capacity-meter">
+                <span style="width: 82%"></span>
+              </div>
+              <div class="enrollment-steps">
+                <div><b>1</b><span>Te anotas</span></div>
+                <div><b>2</b><span>Tu institucion valida</span></div>
+                <div><b>3</b><span>Recibis recordatorio</span></div>
+              </div>
+              <button class="primary-button full-button" data-route="inscripcion">Anotarme a esta experiencia</button>
+              <button class="secondary-button full-button" data-route="estudiante">Guardar para despues</button>
+            </article>
+
+            <article class="kit-card">
+              <div class="kit-icon">⚗</div>
+              <span>Recurso premium</span>
+              <h2>Kit asociado</h2>
+              <p>Accede a guias, dinamicas y presentaciones listas para acompañar la experiencia.</p>
+              <button class="kit-button">Ver kit asociado ↗</button>
+            </article>
+
+            <article class="venue-card">
+              <div class="venue-image">
+                <img id="detail-image" alt="Imagen de la experiencia" />
+                <span>📍</span>
+              </div>
+              <div class="venue-body">
+                <b>Experiencia compartida</b>
+                <p id="detail-seats">Cupos disponibles</p>
+                <div class="venue-actions">
+                  <button>Como llegar</button>
+                  <button data-route="institucion">Unirse</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="activity-card">
+              <h3>Actividad reciente</h3>
+              <div class="activity-item green"><b>Experiencia confirmada</b><span>Hace 2 dias</span></div>
+              <div class="activity-item blue"><b>Institucion unida</b><span>Hace 5 dias</span></div>
+              <div class="activity-item gray"><b>Interes detectado</b><span>Hace 1 semana</span></div>
+            </article>
+          </aside>
+        </section>
+      </section>
+    </template>
+
+    <template id="estudiante-template">
+      <section class="dashboard">
+        <aside class="sidebar">
+          <div class="profile-block">
+            <div class="avatar">ML</div>
+            <b>Martina Lopez</b>
+            <span>5to año · Escuela Tecnica N°1</span>
+          </div>
+          <nav>
+            <a class="active" href="#estudiante">Dashboard</a>
+            <a href="#experiencias">Explorar experiencias</a>
+            <a href="#certificado">Certificados</a>
+            <a href="#feedback">Feedback</a>
+          </nav>
+        </aside>
+        <section class="dashboard-main">
+          <div class="dashboard-title">
+            <div>
+              <span class="eyebrow">Dashboard estudiante</span>
+              <h1>Hola, Martina. Estas experiencias van con tus intereses.</h1>
+            </div>
+            <button class="primary-button" data-route="experiencias">Explorar mas</button>
+          </div>
+          <div class="interest-list wide">
+            <span>Tecnologia</span><span>Diseño UX</span><span>Emprendimiento</span><span>Finanzas</span>
+          </div>
+          <div class="metric-grid">
+            <article><strong>3</strong><span>proximas experiencias</span></article>
+            <article><strong>8</strong><span>guardadas</span></article>
+            <article><strong>2</strong><span>certificados</span></article>
+            <article><strong>91%</strong><span>afinidad promedio</span></article>
+          </div>
+          <section class="panel sprint-panel">
+            <div class="panel-heading">
+              <h2>Mis inscripciones</h2>
+              <button class="small-button" data-route="experiencias">Explorar</button>
+            </div>
+            <div class="student-card-grid">
+              <article class="student-experience-card">
+                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAchdwwzBKdGTZQ5-VzEirOEFiGln5PutkT8NFma7Eas_ZA_K3dXHWHBO74cZnZC52RB9F963RQvE_GDNj-VIFgjQKezl_skuTkxxhFHn9Tlv4YN620ceU9rBDMC3LvNNjbDIPh-qB0cymnp-IQDBCu1zXm4QyV6dDeKOgCLUSdVMJmdKGQUFcyhd-ITC0QWwDDugk-9_Lq9SdFfrVfzBEHJqS2m6E_6RiC2_eplPocDOeypj6T4BHPIw8lhymk3PyZ_JbKKbi1OeVQ" alt="Tecnologia" />
+                <div><span class="status-badge green">Confirmada</span><h3>Como se crea una app desde cero</h3><p>Virtual · 12 de junio · 4 instituciones</p></div>
+              </article>
+              <article class="student-experience-card">
+                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuwA154YVTjpaYwgkXSBZMR9TG6uxnkOilEpRFEKszdJbWY11zamGayEFvoeJg9WOPfKRNe9_hlYGLBozcZV2ask3a7jC06IHNj0ywSnMwxo9hmlCFh72i2ZdXffK14dMJxn8ORdYp5pt-YjIBueZE8imb9jwl-1g36zDuzycqwiiFvlce6bsrCHqeMgcGc3ff1T1F9IvG_5-8YeHhbm8GuXeFiMSQeEY_2TbCoSTauPN6KVLy5XuGwZA64x7DZFJLNs1ySYQ2CyAm" alt="Diseño" />
+                <div><span class="status-badge soft">Pendiente</span><h3>Diseño UX/UI: como se piensa una app</h3><p>Presencial · validacion institucional</p></div>
+              </article>
+            </div>
+          </section>
+          <div class="two-column">
+            <section class="panel">
+              <div class="panel-heading">
+                <h2>Recomendadas para vos</h2>
+                <a href="#experiencias">Ver catalogo</a>
+              </div>
+              <div class="stack-list" id="student-recommendations"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-heading">
+                <h2>Tu recorrido</h2>
+              </div>
+              <ol class="timeline">
+                <li><b>Perfil de intereses</b><span>Completado</span></li>
+                <li><b>Primera experiencia</b><span>Diseño UX/UI · Confirmada</span></li>
+                <li><b>Feedback pendiente</b><span>Disponible despues del encuentro</span></li>
+              </ol>
+            </section>
+          </div>
+        </section>
+      </section>
+    </template>
+
+    <template id="institucion-template">
+      <section class="dashboard">
+        <aside class="sidebar">
+          <div class="profile-block">
+            <div class="avatar">ET</div>
+            <b>Escuela Tecnica N°1</b>
+            <span>Institucion verificada</span>
+          </div>
+          <nav>
+            <a class="active" href="#institucion">Panel</a>
+            <a href="#experiencias">Experiencias</a>
+            <a href="#feedback">Feedback</a>
+          </nav>
+        </aside>
+        <section class="dashboard-main">
+          <div class="dashboard-title">
+            <div>
+              <span class="eyebrow">Dashboard institucion</span>
+              <h1>Coordina experiencias sin imponerlas por curso</h1>
+            </div>
+            <div class="button-row">
+              <button class="secondary-button" data-route="interes-detectado">Publicar interes detectado</button>
+              <button class="primary-button" data-route="experiencias">Habilitar experiencia</button>
+            </div>
+          </div>
+          <div class="metric-grid">
+            <article><strong>14</strong><span>experiencias habilitadas</span></article>
+            <article><strong>312</strong><span>estudiantes inscriptos</span></article>
+            <article><strong>78%</strong><span>participacion voluntaria</span></article>
+            <article><strong>4.7</strong><span>feedback promedio</span></article>
+          </div>
+          <div class="two-column">
+            <section class="panel">
+              <div class="panel-heading">
+                <h2>Experiencias habilitadas</h2>
+                <button class="small-button">Reservar cupos</button>
+              </div>
+              <div class="stack-list">
+                <article class="list-card"><b>Como se crea una app desde cero</b><span>42 inscriptos · 3ro a 6to · Confirmada</span></article>
+                <article class="list-card"><b>Finanzas personales para adolescentes</b><span>36 inscriptos · Virtual · Abierta</span></article>
+                <article class="list-card"><b>Logistica: como llega un producto a tu casa</b><span>28 inscriptos · Visita presencial</span></article>
+              </div>
+            </section>
+            <section class="panel">
+              <div class="panel-heading">
+                <h2>Intereses detectados</h2>
+              </div>
+              <div class="stack-list">
+                <article class="list-card"><b>Desarrollo de software</b><span>7 estudiantes · agrupado con 4 instituciones</span></article>
+                <article class="list-card"><b>Finanzas personales</b><span>18 estudiantes · con experiencia propuesta</span></article>
+                <article class="list-card"><b>Salud y ciencias</b><span>11 estudiantes · publicado</span></article>
+              </div>
+            </section>
+          </div>
+          <section class="panel full-panel">
+            <div class="panel-heading">
+              <h2>Experiencias compartidas disponibles</h2>
+              <button class="small-button" data-route="experiencias">Ver todas</button>
+            </div>
+            <div class="shared-grid">
+              <article class="list-card"><b>Como se crea una app desde cero</b><span>4 instituciones · 82 estudiantes inscriptos · 18 cupos libres</span></article>
+              <article class="list-card"><b>Finanzas personales para adolescentes</b><span>3 instituciones · 76 estudiantes inscriptos · virtual</span></article>
+              <article class="list-card"><b>Como es trabajar en salud hoy</b><span>2 instituciones · 25 cupos libres · hibrida</span></article>
+            </div>
+          </section>
+          <section class="panel full-panel">
+            <div class="panel-heading">
+              <h2>Gestion de cupos por institucion</h2>
+              <button class="small-button">Invitar estudiantes</button>
+            </div>
+            <div class="quota-table">
+              <div><b>Como se crea una app desde cero</b><span>20 cupos reservados</span><strong>14 confirmados</strong><em>6 pendientes</em></div>
+              <div><b>Finanzas personales</b><span>18 cupos reservados</span><strong>11 confirmados</strong><em>7 pendientes</em></div>
+              <div><b>Logistica y operaciones</b><span>12 cupos reservados</span><strong>8 confirmados</strong><em>4 pendientes</em></div>
+            </div>
+          </section>
+        </section>
+      </section>
+    </template>
+
+    <template id="profesional-template">
+      <section class="dashboard simple">
+        <section class="dashboard-main full">
+          <div class="dashboard-title">
+            <div>
+              <span class="eyebrow">Dashboard profesional</span>
+              <h1>Ofrece experiencias simples con apoyo de kits prearmados</h1>
+            </div>
+            <button class="primary-button" data-route="crear-experiencia">Crear experiencia</button>
+          </div>
+          <div class="metric-grid">
+            <article><strong>6</strong><span>experiencias dadas</span></article>
+            <article><strong>240</strong><span>estudiantes alcanzados</span></article>
+            <article><strong>9 h</strong><span>voluntarias</span></article>
+            <article><strong>4.9</strong><span>calificacion</span></article>
+          </div>
+          <section class="panel">
+            <div class="panel-heading">
+              <h2>Kits disponibles</h2>
+              <a href="#kits">Ver todos</a>
+            </div>
+            <div class="kit-grid">
+              <article><b>Un dia en la vida de un programador</b><span>Slides · dinamica · preguntas guia</span></article>
+              <article><b>Como prepararse para una entrevista</b><span>Actividad final · checklist</span></article>
+              <article><b>Diseño UX/UI: como se piensa una app</b><span>Plantilla de ejercicio</span></article>
+            </div>
+          </section>
+        </section>
+      </section>
+    </template>
+
+    <template id="empresa-template">
+      <section class="dashboard simple">
+        <section class="dashboard-main full">
+          <div class="dashboard-title">
+            <div>
+              <span class="eyebrow">Dashboard empresa</span>
+              <h1>Impacto social medible y vinculo temprano con futuros talentos</h1>
+            </div>
+            <button class="primary-button" data-route="crear-experiencia">Crear experiencia</button>
+          </div>
+          <div class="metric-grid">
+            <article><strong>18</strong><span>experiencias realizadas</span></article>
+            <article><strong>620</strong><span>estudiantes alcanzados</span></article>
+            <article><strong>34</strong><span>empleados voluntarios</span></article>
+            <article><strong>92%</strong><span>impacto positivo</span></article>
+          </div>
+          <div class="two-column">
+            <section class="panel">
+              <div class="panel-heading">
+                <h2>Impacto mensual</h2>
+                <button class="small-button">Descargar PDF</button>
+              </div>
+              <div class="chart">
+                <span style="height: 42%"></span>
+                <span style="height: 64%"></span>
+                <span style="height: 52%"></span>
+                <span style="height: 86%"></span>
+                <span style="height: 72%"></span>
+                <span style="height: 94%"></span>
+              </div>
+            </section>
+            <section class="panel">
+              <div class="panel-heading">
+                <h2>Intereses generados</h2>
+              </div>
+              <div class="stack-list">
+                <article class="list-card"><b>Tecnologia y producto</b><span>238 estudiantes interesados</span></article>
+                <article class="list-card"><b>Logistica y operaciones</b><span>144 estudiantes interesados</span></article>
+                <article class="list-card"><b>Marketing digital</b><span>119 estudiantes interesados</span></article>
+              </div>
+            </section>
+          </div>
+          <section class="panel full-panel">
+            <div class="panel-heading">
+              <h2>Demanda vocacional detectada</h2>
+              <button class="small-button" data-route="demanda">Ver demanda agrupada</button>
+            </div>
+            <div class="shared-grid">
+              <article class="list-card action-card"><b>87 estudiantes interesados en desarrollo de software</b><span>5 instituciones agrupadas · modalidad preferida virtual</span><button class="small-button" data-route="crear-experiencia">Crear experiencia</button></article>
+              <article class="list-card action-card"><b>64 estudiantes interesados en finanzas</b><span>3 instituciones agrupadas · 4to a 6to año</span><button class="small-button" data-route="crear-experiencia">Crear experiencia</button></article>
+              <article class="list-card action-card"><b>43 estudiantes interesados en salud</b><span>2 instituciones agrupadas · formato hibrido</span><button class="small-button" data-route="crear-experiencia">Crear experiencia</button></article>
+            </div>
+          </section>
+        </section>
+      </section>
+    </template>
+
+    <template id="crear-experiencia-template">
+      <section class="page-header compact">
+        <span class="eyebrow">Nueva experiencia</span>
+        <h1>Publicar una experiencia profesional</h1>
+        <p>El objetivo es ofrecer una actividad clara, breve y elegible por estudiantes interesados.</p>
+      </section>
+      <section class="form-shell">
+        <form class="experience-form">
+          <label>Titulo
+            <input value="Como se crea una app desde cero" />
+          </label>
+          <label>Area
+            <select><option>Tecnologia</option><option>Salud</option><option>Diseño</option></select>
+          </label>
+          <label>Modalidad
+            <select><option>Virtual</option><option>Presencial</option><option>Hibrida</option></select>
+          </label>
+          <label>Alcance
+            <select><option>Abierta a varias instituciones</option><option>Una institucion especifica</option></select>
+          </label>
+          <label>Cupos disponibles
+            <input type="number" value="40" />
+          </label>
+          <label>Cupo maximo por institucion
+            <input type="number" value="20" />
+          </label>
+          <label>Años recomendados
+            <input value="3ro a 6to año" />
+          </label>
+          <label>Nivel
+            <select><option>Exploratorio</option><option>Inicial</option><option>Intermedio</option></select>
+          </label>
+          <label class="wide-field">Descripcion
+            <textarea>Una experiencia para entender como se piensa, diseña y desarrolla una aplicacion digital desde una idea inicial.</textarea>
+          </label>
+          <label class="wide-field">Que van a aprender
+            <textarea>Roles dentro de un equipo digital, proceso de producto, diseño UX y primeros pasos para prototipar.</textarea>
+          </label>
+          <label class="wide-field">Crear desde interes detectado
+            <select><option>87 estudiantes interesados en desarrollo de software</option><option>No usar demanda detectada</option></select>
+          </label>
+          <div class="form-actions">
+            <button type="button" class="secondary-button" data-route="experiencias">Cancelar</button>
+            <button type="button" class="primary-button" data-route="experiencias">Publicar experiencia</button>
+          </div>
+        </form>
+      </section>
+    </template>
+
+    <template id="sumar-institucion-template">
+      <section class="page-header compact">
+        <span class="eyebrow">Instituciones</span>
+        <h1>Sumar institucion al programa Inspira</h1>
+        <p>La escuela se suma al programa para habilitar experiencias, coordinar cupos y acompañar a estudiantes con intereses reales.</p>
+      </section>
+      <section class="form-shell">
+        <form class="experience-form">
+          <label>Nombre de institucion<input value="Escuela Tecnica N°1" /></label>
+          <label>Ubicacion<input value="Buenos Aires" /></label>
+          <label>Orientacion<select><option>Tecnica</option><option>Bachiller</option><option>Comercial</option><option>Artistica</option></select></label>
+          <label>Años participantes<input value="3ro a 6to año" /></label>
+          <label>Cantidad aproximada de estudiantes<input type="number" value="420" /></label>
+          <label>Modalidades posibles<select><option>Virtual, presencial e hibrida</option><option>Solo virtual</option><option>Solo presencial</option></select></label>
+          <label class="wide-field">Acepta experiencias compartidas<select><option>Si, con otras instituciones</option><option>No, solo exclusivas</option></select></label>
+          <div class="form-actions">
+            <button type="button" class="secondary-button" data-route="landing">Cancelar</button>
+            <button type="button" class="primary-button" data-route="institucion">Sumarse al programa</button>
+          </div>
+        </form>
+      </section>
+    </template>
+
+    <template id="inscripcion-template">
+      <section class="page-header compact">
+        <span class="eyebrow">Inscripcion</span>
+        <h1>Confirmar participacion</h1>
+        <p>La experiencia queda reservada para el estudiante y pendiente de validacion institucional si corresponde.</p>
+      </section>
+      <section class="checkout-layout">
+        <article class="panel checkout-main">
+          <div class="checkout-experience">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAchdwwzBKdGTZQ5-VzEirOEFiGln5PutkT8NFma7Eas_ZA_K3dXHWHBO74cZnZC52RB9F963RQvE_GDNj-VIFgjQKezl_skuTkxxhFHn9Tlv4YN620ceU9rBDMC3LvNNjbDIPh-qB0cymnp-IQDBCu1zXm4QyV6dDeKOgCLUSdVMJmdKGQUFcyhd-ITC0QWwDDugk-9_Lq9SdFfrVfzBEHJqS2m6E_6RiC2_eplPocDOeypj6T4BHPIw8lhymk3PyZ_JbKKbi1OeVQ" alt="Experiencia de tecnologia" />
+            <div>
+              <span class="status-badge">Interinstitucional</span>
+              <h2>Como se crea una app desde cero</h2>
+              <p>ProductoLab · Virtual · 12 de junio · 3ro a 6to</p>
+            </div>
+          </div>
+          <div class="confirmation-grid">
+            <article><b>Estado</b><span>Pendiente de validacion institucional</span></article>
+            <article><b>Cupos</b><span>18 disponibles de 100</span></article>
+            <article><b>Instituciones</b><span>4 escuelas participantes</span></article>
+          </div>
+          <label class="check-row"><input type="checkbox" checked /> Confirmo que quiero participar y recibir recordatorios.</label>
+          <label class="check-row"><input type="checkbox" checked /> Acepto compartir mi inscripcion con mi institucion.</label>
+        </article>
+        <aside class="panel checkout-side">
+          <h2>Resumen</h2>
+          <ol class="timeline">
+            <li><b>Inscripcion enviada</b><span>Ahora</span></li>
+            <li><b>Validacion institucional</b><span>Escuela Tecnica N°1</span></li>
+            <li><b>Recordatorio automatico</b><span>24 hs antes</span></li>
+          </ol>
+          <button class="primary-button full-button" data-route="estudiante">Confirmar inscripcion</button>
+          <button class="secondary-button full-button" data-route="detalle">Volver al detalle</button>
+        </aside>
+      </section>
+    </template>
+
+    <template id="demanda-template">
+      <section class="page-header compact">
+        <span class="eyebrow">Demanda vocacional agrupada</span>
+        <h1>Intereses reales listos para convertirse en experiencias</h1>
+        <p>La plataforma agrupa estudiantes de varias instituciones para que empresas y profesionales creen experiencias de mayor impacto.</p>
+      </section>
+      <section class="demand-layout">
+        <article class="demand-card featured">
+          <div>
+            <span class="status-badge green">Alta demanda</span>
+            <h2>Desarrollo de software</h2>
+            <p>87 estudiantes interesados · 5 instituciones agrupadas · modalidad preferida virtual</p>
+          </div>
+          <button class="primary-button" data-route="crear-experiencia">Crear experiencia para este interes</button>
+        </article>
+        <article class="demand-card">
+          <span class="status-badge soft">Agrupado</span>
+          <h2>Finanzas personales</h2>
+          <p>64 estudiantes · 3 instituciones · 4to a 6to año</p>
+          <button class="secondary-button" data-route="crear-experiencia">Crear experiencia</button>
+        </article>
+        <article class="demand-card">
+          <span class="status-badge soft">Publicado</span>
+          <h2>Salud y ciencias</h2>
+          <p>43 estudiantes · 2 instituciones · formato hibrido</p>
+          <button class="secondary-button" data-route="crear-experiencia">Crear experiencia</button>
+        </article>
+      </section>
+    </template>
+
+    <template id="interes-detectado-template">
+      <section class="page-header compact">
+        <span class="eyebrow">Demanda vocacional</span>
+        <h1>Publicar interes detectado</h1>
+        <p>No es una solicitud de charla: es una señal de interes real para que la plataforma pueda agrupar demanda con otras instituciones.</p>
+      </section>
+      <section class="form-shell">
+        <form class="experience-form">
+          <label>Area de interes<select><option>Desarrollo de software</option><option>Salud</option><option>Finanzas</option><option>Diseño</option></select></label>
+          <label>Estudiantes interesados<input type="number" value="7" /></label>
+          <label>Años recomendados<input value="4to a 6to" /></label>
+          <label>Modalidad posible<select><option>Virtual o presencial</option><option>Virtual</option><option>Presencial</option></select></label>
+          <label class="wide-field">Acepta experiencia compartida<select><option>Si, agrupar con otras instituciones</option><option>No</option></select></label>
+          <label class="wide-field">Comentario contextual<textarea>Grupo interesado en conocer roles dentro de una empresa tech y caminos de formacion posibles.</textarea></label>
+          <div class="form-actions">
+            <button type="button" class="secondary-button" data-route="institucion">Cancelar</button>
+            <button type="button" class="primary-button" data-route="institucion">Publicar interes detectado</button>
+          </div>
+        </form>
+      </section>
+    </template>
+
+    <template id="feedback-template">
+      <section class="page-header compact">
+        <span class="eyebrow">Feedback post-experiencia</span>
+        <h1>Medir si la experiencia ayudo a imaginar futuros posibles</h1>
+      </section>
+      <section class="form-shell narrow">
+        <div class="survey-card">
+          <h2>Diseño UX/UI: como se piensa una app</h2>
+          <label>La experiencia me ayudo a imaginar mejor mi futuro
+            <input type="range" min="1" max="5" value="4" />
+          </label>
+          <label>Me intereso seguir explorando esta area
+            <input type="range" min="1" max="5" value="5" />
+          </label>
+          <label>Comentario opcional
+            <textarea>Me gusto ver que hay roles distintos dentro de un equipo de producto.</textarea>
+          </label>
+          <button class="primary-button">Enviar feedback</button>
+        </div>
+      </section>
+    </template>
+
+    <template id="certificado-template">
+      <section class="certificate-page">
+        <article class="certificate">
+          <span class="eyebrow">Certificado de participacion</span>
+          <h1>Martina Lopez</h1>
+          <p>Participo en la experiencia profesional</p>
+          <h2>Diseño UX/UI: como se piensa una app</h2>
+          <div class="certificate-meta">
+            <span>Escuela Tecnica N°1</span>
+            <span>60 minutos</span>
+            <span>Codigo: INS-2026-UX-184</span>
+          </div>
+          <div class="qr-block">QR</div>
+        </article>
+      </section>
+    </template>
+
+    <script src="./app.js?v=2"></script>
+  </body>
+</html>
