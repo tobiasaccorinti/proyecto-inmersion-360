@@ -37,6 +37,9 @@ export function RegisterEstudianteForm() {
   return (
     <div className="w-full max-w-md">
       <div className="mb-8">
+        <span className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 px-3 py-1 rounded-full mb-4">
+          🎓 Registrándote como Estudiante
+        </span>
         <h1
           style={{ fontFamily: 'var(--font-heading, sans-serif)' }}
           className="text-3xl font-bold text-gray-900 mb-2"

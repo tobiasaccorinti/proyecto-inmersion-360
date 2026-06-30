@@ -56,7 +56,7 @@ export function Sidebar({ navItems, activeNav, onNavChange, userName, userRole, 
               onNavChange(item.id)
               setIsOpen(false)
             }}
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-left transition-all ${
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium text-left transition-all ${
               activeNav === item.id
                 ? 'bg-indigo-50 text-indigo-700'
                 : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800'
@@ -71,12 +71,12 @@ export function Sidebar({ navItems, activeNav, onNavChange, userName, userRole, 
       {/* Usuario */}
       <div className="border-t border-gray-100 pt-4 px-2 mt-auto">
         <div className="flex items-center gap-2 mb-3">
-          <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-xs font-bold flex-shrink-0">
+          <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-sm font-bold flex-shrink-0">
             {userName?.charAt(0).toUpperCase() ?? '?'}
           </div>
           <div className="min-w-0">
-            <p className="text-sm font-semibold text-gray-800 truncate">{userName}</p>
-            <p className="text-xs text-gray-400 capitalize">{userRole}</p>
+            <p className="text-base font-semibold text-gray-800 truncate">{userName}</p>
+            <p className="text-sm text-gray-400 capitalize">{userRole}</p>
           </div>
         </div>
         <button
@@ -92,7 +92,7 @@ export function Sidebar({ navItems, activeNav, onNavChange, userName, userRole, 
   return (
     <>
       {/* Sidebar Desktop */}
-      <aside className="hidden md:flex w-64 bg-white flex-col py-6 px-4 gap-6 min-h-screen border-r border-gray-100 flex-shrink-0 sticky top-0">
+      <aside className="hidden md:flex w-72 bg-white flex-col py-6 px-5 gap-6 min-h-screen border-r border-gray-100 flex-shrink-0 sticky top-0">
         {content}
       </aside>
 

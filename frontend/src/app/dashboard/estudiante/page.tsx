@@ -134,7 +134,9 @@ export default function DashboardEstudiantePage() {
   const [feedbackExp, setFeedbackExp] = useState<Experiencia | null>(null)
   const [inscribiendo, setInscribiendo] = useState(false)
   const [filtroArea, setFiltroArea] = useState('')
-  const [filtroModalidadRec, setFiltroModalidadRec] = useState('')
+  const [filtroModalidad, setFiltroModalidad] = useState('')
+  const [ordenarPor, setOrdenarPor] = useState('')
+  const [filtrosAbiertos, setFiltrosAbiertos] = useState(false)
   const [mesCalendario, setMesCalendario] = useState(new Date())
 
   useEffect(() => {
@@ -196,8 +198,17 @@ export default function DashboardEstudiantePage() {
 
   const inscripcionIds = new Set(inscripciones.map((i) => i.experiencia_id))
   const feedbackIds = new Set(misFeedbacks.map((f) => f.experiencia_id))
-  const expFiltradas = experiencias.filter((e) => !filtroArea || e.area === filtroArea)
   const repPorEmpresa = Object.fromEntries(reputaciones.map((r) => [r.empresa_id, r]))
+
+  const expFiltradas = experiencias
+    .filter((e) => !filtroArea || e.area === filtroArea)
+    .filter((e) => !filtroModalidad || e.modalidad === filtroModalidad)
+    .sort((a, b) => {
+      if (ordenarPor === 'fecha-asc') return new Date(a.fecha).getTime() - new Date(b.fecha).getTime()
+      if (ordenarPor === 'fecha-desc') return new Date(b.fecha).getTime() - new Date(a.fecha).getTime()
+      if (ordenarPor === 'cupos') return b.cupos_totales - a.cupos_totales
+      return 0
+    })
   const ahora = new Date()
 
   const inscripcionesPasadas = inscripciones.filter(
@@ -271,63 +282,135 @@ export default function DashboardEstudiantePage() {
         {/* Explorar */}
         {activeNav === 'explorar' && (
           <div className="flex flex-col gap-6">
-            {/* Sección "Para vos" — filtro solo por modalidad */}
+            {/* Sección "Para vos" */}
             {recomendadas.length > 0 && (
               <div className="bg-white rounded-2xl p-4 md:p-6 border border-gray-100 shadow-sm">
-                <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-3">
-                  <div className="flex items-center gap-2">
-                    <span className="text-base">🎯</span>
-                    <div>
-                      <p style={{ fontFamily: 'var(--font-heading, sans-serif)' }} className="text-sm font-bold text-gray-900">Para vos</p>
-                      <p className="text-xs text-gray-400">Basadas en tus inscripciones anteriores</p>
-                    </div>
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-base">🎯</span>
+                  <div>
+                    <p style={{ fontFamily: 'var(--font-heading, sans-serif)' }} className="text-sm font-bold text-gray-900">Para vos</p>
+                    <p className="text-xs text-gray-400">Basadas en tus inscripciones anteriores</p>
                   </div>
-                  <select
-                    className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 text-gray-600 outline-none bg-gray-50"
-                    value={filtroModalidadRec}
-                    onChange={(e) => setFiltroModalidadRec(e.target.value)}
-                  >
-                    <option value="">Todas las modalidades</option>
-                    <option value="virtual">Virtual</option>
-                    <option value="presencial">Presencial</option>
-                    <option value="hibrida">Híbrida</option>
-                  </select>
                 </div>
-                {(() => {
-                  const filtradas = recomendadas.filter((e) => !filtroModalidadRec || e.modalidad === filtroModalidadRec)
-                  return filtradas.length === 0 ? (
-                    <p className="text-sm text-gray-400">No hay recomendaciones para esa modalidad.</p>
-                  ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {filtradas.map((exp) => (
-                        <div key={exp.id} className="relative">
-                          <ExperienciaCard experiencia={exp} yaInscripto={inscripcionIds.has(exp.id)} onClick={setSeleccionada} reputacion={repPorEmpresa[exp.creado_por] ?? null} />
-                          <div className="absolute top-2 right-2 bg-indigo-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">🎯 Para vos</div>
-                        </div>
-                      ))}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {recomendadas.map((exp) => (
+                    <div key={exp.id} className="relative">
+                      <ExperienciaCard experiencia={exp} yaInscripto={inscripcionIds.has(exp.id)} onClick={setSeleccionada} reputacion={repPorEmpresa[exp.creado_por] ?? null} />
+                      <div className="absolute top-2 right-2 bg-indigo-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">🎯 Para vos</div>
                     </div>
-                  )
-                })()}
+                  ))}
+                </div>
               </div>
             )}
 
-            {/* Sección todas las experiencias — filtro por área */}
+            {/* Sección todas las experiencias */}
             <div className="bg-white rounded-2xl p-4 md:p-6 border border-gray-100 shadow-sm">
-              <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+              <div className="flex items-center justify-between mb-6">
                 <h2 style={{ fontFamily: 'var(--font-heading, sans-serif)' }} className="text-lg font-bold text-gray-900">
                   Todas las experiencias
                 </h2>
-                <select
-                  className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 text-gray-600 outline-none bg-gray-50 flex-1 md:flex-none"
-                  value={filtroArea}
-                  onChange={(e) => setFiltroArea(e.target.value)}
-                >
-                  <option value="">Todas las áreas</option>
-                  {AREAS.map((a) => <option key={a}>{a}</option>)}
-                </select>
+                <div className="relative">
+                  <button
+                    onClick={() => setFiltrosAbiertos((v) => !v)}
+                    className={`flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full border transition-all ${
+                      filtroArea || filtroModalidad || ordenarPor
+                        ? 'bg-indigo-600 text-white border-indigo-600'
+                        : 'bg-gray-50 text-gray-600 border-gray-200 hover:border-indigo-300 hover:text-indigo-600'
+                    }`}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/>
+                    </svg>
+                    Filtros
+                    {[filtroArea, filtroModalidad, ordenarPor].filter(Boolean).length > 0 && (
+                      <span className="bg-white text-indigo-600 text-xs font-bold w-4 h-4 rounded-full flex items-center justify-center leading-none">
+                        {[filtroArea, filtroModalidad, ordenarPor].filter(Boolean).length}
+                      </span>
+                    )}
+                  </button>
+
+                  {filtrosAbiertos && (
+                    <div className="absolute right-0 top-full mt-2 w-72 bg-white border border-gray-200 rounded-2xl shadow-lg z-10 p-4 flex flex-col gap-4">
+                      {/* Área */}
+                      <div>
+                        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Área</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {AREAS.map((a) => (
+                            <button
+                              key={a}
+                              onClick={() => setFiltroArea(filtroArea === a ? '' : a)}
+                              className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-all ${
+                                filtroArea === a
+                                  ? 'bg-indigo-600 text-white border-indigo-600'
+                                  : 'bg-gray-50 text-gray-600 border-gray-200 hover:border-indigo-300 hover:text-indigo-600'
+                              }`}
+                            >
+                              {a}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Modalidad */}
+                      <div>
+                        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Modalidad</p>
+                        <div className="flex gap-1.5">
+                          {(['virtual', 'presencial', 'hibrida'] as const).map((m) => (
+                            <button
+                              key={m}
+                              onClick={() => setFiltroModalidad(filtroModalidad === m ? '' : m)}
+                              className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-all capitalize ${
+                                filtroModalidad === m
+                                  ? 'bg-indigo-600 text-white border-indigo-600'
+                                  : 'bg-gray-50 text-gray-600 border-gray-200 hover:border-indigo-300 hover:text-indigo-600'
+                              }`}
+                            >
+                              {m}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Ordenar */}
+                      <div>
+                        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Ordenar por</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {[
+                            { value: 'fecha-asc', label: 'Más próxima' },
+                            { value: 'fecha-desc', label: 'Más lejana' },
+                            { value: 'cupos', label: 'Más cupos' },
+                          ].map((op) => (
+                            <button
+                              key={op.value}
+                              onClick={() => setOrdenarPor(ordenarPor === op.value ? '' : op.value)}
+                              className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-all ${
+                                ordenarPor === op.value
+                                  ? 'bg-indigo-600 text-white border-indigo-600'
+                                  : 'bg-gray-50 text-gray-600 border-gray-200 hover:border-indigo-300 hover:text-indigo-600'
+                              }`}
+                            >
+                              {op.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Limpiar */}
+                      {(filtroArea || filtroModalidad || ordenarPor) && (
+                        <button
+                          onClick={() => { setFiltroArea(''); setFiltroModalidad(''); setOrdenarPor('') }}
+                          className="text-xs text-indigo-500 hover:text-indigo-700 font-semibold text-left"
+                        >
+                          Limpiar filtros
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
+
               {expFiltradas.length === 0 ? (
-                <p className="text-sm text-gray-400">No hay experiencias disponibles.</p>
+                <p className="text-sm text-gray-400">No hay experiencias para los filtros seleccionados.</p>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {expFiltradas.map((exp) => (

@@ -132,6 +132,22 @@ export const experienciasService = {
     return (data ?? []).filter((e) => !inscritasIds.has(e.id)).slice(0, 6)
   },
 
+  /** Actualiza los campos de una experiencia (solo el dueño) */
+  async actualizar(id: string, userId: string, dto: Partial<CreateExperienciaDto>) {
+    const supabase = getSupabase()
+    const { data: exp } = await supabase.from('experiencias').select('creado_por').eq('id', id).single()
+    if (!exp || exp.creado_por !== userId) throw createError('No autorizado', 403)
+
+    const { data, error } = await supabase
+      .from('experiencias')
+      .update(dto)
+      .eq('id', id)
+      .select()
+      .single()
+    if (error) throw createError(error.message, 500)
+    return data
+  },
+
   /** Actualiza el estado de una experiencia */
   async actualizarEstado(id: string, userId: string, estado: string) {
     const supabase = getSupabase()

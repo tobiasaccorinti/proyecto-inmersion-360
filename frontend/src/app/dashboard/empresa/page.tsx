@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation'
 import { Sidebar, type NavItem } from '@/components/Sidebar'
 import { ExperienciaCard } from '@/components/ExperienciaCard'
 import { CrearExperienciaForm } from '@/components/CrearExperienciaForm'
+import { EditarExperienciaForm } from '@/components/EditarExperienciaForm'
 import { experienciasService } from '@/services/experienciasService'
 import { feedbackService } from '@/services/feedbackService'
 import { empresasService } from '@/services/empresasService'
@@ -79,6 +80,7 @@ export default function DashboardEmpresaPage() {
   const [loading, setLoading] = useState(true)
   const [activeNav, setActiveNav] = useState('experiencias')
   const [token, setToken] = useState<string | null>(null)
+  const [editando, setEditando] = useState<Experiencia | null>(null)
 
   const isAprobada = profile?.validacion_estado === 'aprobada'
   const navItems = isAprobada ? NAV_ITEMS_APROBADA : NAV_ITEMS_PENDIENTE
@@ -245,6 +247,16 @@ export default function DashboardEmpresaPage() {
               <p className="text-sm text-gray-400">
                 Podrás ver y crear experiencias una vez que tu cuenta sea aprobada.
               </p>
+            ) : editando && token ? (
+              <EditarExperienciaForm
+                experiencia={editando}
+                token={token}
+                onUpdated={(updated) => {
+                  setExperiencias((prev) => prev.map((e) => e.id === updated.id ? updated : e))
+                  setEditando(null)
+                }}
+                onCancel={() => setEditando(null)}
+              />
             ) : experiencias.length === 0 ? (
               <p className="text-sm text-gray-400">
                 Todavía no creaste ninguna experiencia.{' '}
@@ -255,7 +267,19 @@ export default function DashboardEmpresaPage() {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {experiencias.map((exp) => (
-                  <ExperienciaCard key={exp.id} experiencia={exp} mostrarEstado onClick={() => {}} />
+                  <div key={exp.id} className="relative group">
+                    <ExperienciaCard experiencia={exp} mostrarEstado onClick={() => {}} />
+                    <button
+                      onClick={() => setEditando(exp)}
+                      className="absolute top-3 right-3 w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-indigo-50 border border-gray-100"
+                      title="Editar experiencia"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-indigo-600">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                      </svg>
+                    </button>
+                  </div>
                 ))}
               </div>
             )}

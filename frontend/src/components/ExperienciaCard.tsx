@@ -44,12 +44,12 @@ export function ExperienciaCard({
       onClick={() => onClick(experiencia)}
       className="bg-white rounded-2xl border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition-all"
     >
-      <div className={`h-28 flex items-center justify-center bg-gradient-to-br ${gradient}`}>
-        <span className="text-4xl">{emoji}</span>
+      <div className={`h-36 flex items-center justify-center bg-gradient-to-br ${gradient}`}>
+        <span className="text-5xl">{emoji}</span>
       </div>
-      <div className="p-4">
+      <div className="p-5">
         <div className="flex items-center justify-between mb-2">
-          <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${badge}`}>
+          <span className={`text-sm font-medium px-2.5 py-1 rounded-full ${badge}`}>
             {experiencia.area}
           </span>
           {mostrarEstado && (
@@ -65,18 +65,18 @@ export function ExperienciaCard({
         </div>
         <h3
           style={{ fontFamily: 'var(--font-heading, sans-serif)' }}
-          className="font-bold text-gray-900 text-sm mb-1 line-clamp-2"
+          className="font-bold text-gray-900 text-base mb-1 line-clamp-2"
         >
           {experiencia.titulo}
         </h3>
-        <p className="text-xs text-gray-500">{experiencia.empresa}</p>
+        <p className="text-sm text-gray-500">{experiencia.empresa}</p>
         {reputacion && (
-          <div className="mt-1.5">
+          <div className="mt-2">
             <ReputacionBadge rep={reputacion} />
           </div>
         )}
-        <p className="text-xs text-gray-400 mt-2">{formatDate(experiencia.fecha)}</p>
-        <p className="text-xs text-gray-400 capitalize">{experiencia.modalidad}</p>
+        <p className="text-sm text-gray-400 mt-2">{formatDate(experiencia.fecha)}</p>
+        <p className="text-sm text-gray-400 capitalize">{experiencia.modalidad}</p>
       </div>
     </div>
   )

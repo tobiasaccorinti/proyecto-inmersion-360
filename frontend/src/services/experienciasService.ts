@@ -52,6 +52,11 @@ export const experienciasService = {
     return apiRequest<Experiencia[]>('/experiencias/recomendadas/para-mi', { token })
   },
 
+  /** Actualiza los campos de una experiencia */
+  async actualizar(id: string, payload: Partial<CrearExperienciaPayload>, token: string): Promise<Experiencia> {
+    return apiRequest<Experiencia>(`/experiencias/${id}`, { method: 'PUT', body: payload, token })
+  },
+
   /** Cambia el estado de una experiencia */
   async actualizarEstado(
     id: string,

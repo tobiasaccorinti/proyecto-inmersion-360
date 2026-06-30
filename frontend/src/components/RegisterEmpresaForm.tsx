@@ -63,6 +63,9 @@ export function RegisterEmpresaForm() {
   return (
     <div className="w-full max-w-md">
       <div className="mb-8">
+        <span className="inline-flex items-center gap-1.5 text-xs font-bold text-teal-700 bg-teal-50 border border-teal-100 px-3 py-1 rounded-full mb-4">
+          🏢 Registrándote como Empresa
+        </span>
         <h1
           style={{ fontFamily: 'var(--font-heading, sans-serif)' }}
           className="text-3xl font-bold text-gray-900 mb-2"

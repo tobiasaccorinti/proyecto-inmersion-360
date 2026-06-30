@@ -40,9 +40,12 @@ export default function DashboardInstitucionPage() {
   const [recomendadas, setRecomendadas] = useState<Experiencia[]>([])
   const [filtroAreaRec, setFiltroAreaRec] = useState('')
   const [filtroModalidadRec, setFiltroModalidadRec] = useState('')
+  const [filtrosRecAbiertos, setFiltrosRecAbiertos] = useState(false)
   const [seleccionada, setSeleccionada] = useState<Experiencia | null>(null)
   const [filtroArea, setFiltroArea] = useState('')
   const [filtroModalidad, setFiltroModalidad] = useState('')
+  const [ordenarPor, setOrdenarPor] = useState('')
+  const [filtrosAbiertos, setFiltrosAbiertos] = useState(false)
   const [cantidad, setCantidad] = useState(10)
   const [cuposModal, setCuposModal] = useState(10)
 
@@ -144,9 +147,14 @@ export default function DashboardInstitucionPage() {
     )
   }
 
-  const expFiltradas = experienciasDisponibles.filter(
-    (e) => (!filtroArea || e.area === filtroArea) && (!filtroModalidad || e.modalidad === filtroModalidad)
-  )
+  const expFiltradas = experienciasDisponibles
+    .filter((e) => (!filtroArea || e.area === filtroArea) && (!filtroModalidad || e.modalidad === filtroModalidad))
+    .sort((a, b) => {
+      if (ordenarPor === 'fecha-asc') return new Date(a.fecha).getTime() - new Date(b.fecha).getTime()
+      if (ordenarPor === 'fecha-desc') return new Date(b.fecha).getTime() - new Date(a.fecha).getTime()
+      if (ordenarPor === 'cupos') return b.cupos_totales - a.cupos_totales
+      return 0
+    })
   const repPorEmpresa = Object.fromEntries(reputaciones.map((r) => [r.empresa_id, r]))
   const codigosUsados = codigos.filter((c) => c.usado).length
   const inputClass =
@@ -265,25 +273,57 @@ export default function DashboardInstitucionPage() {
                   <p className="text-xs text-indigo-400 mt-0.5">Basadas en tu orientación · Todavía no las habilitaste</p>
                 </div>
               </div>
-              <div className="flex gap-2 flex-wrap">
-                <select
-                  className="text-sm border border-indigo-200 rounded-lg px-3 py-1.5 bg-white text-indigo-700 outline-none"
-                  value={filtroAreaRec}
-                  onChange={(e) => setFiltroAreaRec(e.target.value)}
+              <div className="relative">
+                <button
+                  onClick={() => setFiltrosRecAbiertos((v) => !v)}
+                  className={`flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full border transition-all ${
+                    filtroAreaRec || filtroModalidadRec
+                      ? 'bg-indigo-600 text-white border-indigo-600'
+                      : 'bg-white text-indigo-700 border-indigo-200 hover:border-indigo-400'
+                  }`}
                 >
-                  <option value="">Todas las áreas</option>
-                  {AREAS.map((a) => <option key={a}>{a}</option>)}
-                </select>
-                <select
-                  className="text-sm border border-indigo-200 rounded-lg px-3 py-1.5 bg-white text-indigo-700 outline-none"
-                  value={filtroModalidadRec}
-                  onChange={(e) => setFiltroModalidadRec(e.target.value)}
-                >
-                  <option value="">Todas las modalidades</option>
-                  <option value="virtual">Virtual</option>
-                  <option value="presencial">Presencial</option>
-                  <option value="hibrida">Híbrida</option>
-                </select>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/>
+                  </svg>
+                  Filtros
+                  {[filtroAreaRec, filtroModalidadRec].filter(Boolean).length > 0 && (
+                    <span className="bg-white text-indigo-600 text-xs font-bold w-4 h-4 rounded-full flex items-center justify-center leading-none">
+                      {[filtroAreaRec, filtroModalidadRec].filter(Boolean).length}
+                    </span>
+                  )}
+                </button>
+                {filtrosRecAbiertos && (
+                  <div className="absolute right-0 top-full mt-2 w-72 bg-white border border-gray-200 rounded-2xl shadow-lg z-10 p-4 flex flex-col gap-4">
+                    <div>
+                      <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Área</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {AREAS.map((a) => (
+                          <button key={a} onClick={() => setFiltroAreaRec(filtroAreaRec === a ? '' : a)}
+                            className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-all ${filtroAreaRec === a ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-gray-50 text-gray-600 border-gray-200 hover:border-indigo-300 hover:text-indigo-600'}`}>
+                            {a}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Modalidad</p>
+                      <div className="flex gap-1.5">
+                        {(['virtual', 'presencial', 'hibrida'] as const).map((m) => (
+                          <button key={m} onClick={() => setFiltroModalidadRec(filtroModalidadRec === m ? '' : m)}
+                            className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-all capitalize ${filtroModalidadRec === m ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-gray-50 text-gray-600 border-gray-200 hover:border-indigo-300 hover:text-indigo-600'}`}>
+                            {m}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    {(filtroAreaRec || filtroModalidadRec) && (
+                      <button onClick={() => { setFiltroAreaRec(''); setFiltroModalidadRec('') }}
+                        className="text-xs text-indigo-500 hover:text-indigo-700 font-semibold text-left">
+                        Limpiar filtros
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
             {(() => {
@@ -320,23 +360,72 @@ export default function DashboardInstitucionPage() {
               <h2 style={{ fontFamily: 'var(--font-heading, sans-serif)' }} className="text-lg font-bold text-gray-900">
                 Gestión de experiencias
               </h2>
-              <div className="flex flex-wrap gap-2">
-                <select
-                  className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-gray-50 flex-1 md:flex-none"
-                  value={filtroArea}
-                  onChange={(e) => setFiltroArea(e.target.value)}
+              <div className="relative">
+                <button
+                  onClick={() => setFiltrosAbiertos((v) => !v)}
+                  className={`flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full border transition-all ${
+                    filtroArea || filtroModalidad || ordenarPor
+                      ? 'bg-indigo-600 text-white border-indigo-600'
+                      : 'bg-gray-50 text-gray-600 border-gray-200 hover:border-indigo-300 hover:text-indigo-600'
+                  }`}
                 >
-                  <option value="">Todas las áreas</option>
-                  {AREAS.map((a) => <option key={a}>{a}</option>)}
-                </select>
-                <select
-                  className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-gray-50 flex-1 md:flex-none"
-                  value={filtroModalidad}
-                  onChange={(e) => setFiltroModalidad(e.target.value)}
-                >
-                  <option value="">Todas las modalidades</option>
-                  {MODALIDADES.map((m) => <option key={m} className="capitalize">{m}</option>)}
-                </select>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/>
+                  </svg>
+                  Filtros
+                  {[filtroArea, filtroModalidad, ordenarPor].filter(Boolean).length > 0 && (
+                    <span className="bg-white text-indigo-600 text-xs font-bold w-4 h-4 rounded-full flex items-center justify-center leading-none">
+                      {[filtroArea, filtroModalidad, ordenarPor].filter(Boolean).length}
+                    </span>
+                  )}
+                </button>
+                {filtrosAbiertos && (
+                  <div className="absolute right-0 top-full mt-2 w-72 bg-white border border-gray-200 rounded-2xl shadow-lg z-10 p-4 flex flex-col gap-4">
+                    <div>
+                      <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Área</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {AREAS.map((a) => (
+                          <button key={a} onClick={() => setFiltroArea(filtroArea === a ? '' : a)}
+                            className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-all ${filtroArea === a ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-gray-50 text-gray-600 border-gray-200 hover:border-indigo-300 hover:text-indigo-600'}`}>
+                            {a}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Modalidad</p>
+                      <div className="flex gap-1.5">
+                        {(['virtual', 'presencial', 'hibrida'] as const).map((m) => (
+                          <button key={m} onClick={() => setFiltroModalidad(filtroModalidad === m ? '' : m)}
+                            className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-all capitalize ${filtroModalidad === m ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-gray-50 text-gray-600 border-gray-200 hover:border-indigo-300 hover:text-indigo-600'}`}>
+                            {m}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Ordenar por</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {[
+                          { value: 'fecha-asc', label: 'Más próxima' },
+                          { value: 'fecha-desc', label: 'Más lejana' },
+                          { value: 'cupos', label: 'Más cupos' },
+                        ].map((op) => (
+                          <button key={op.value} onClick={() => setOrdenarPor(ordenarPor === op.value ? '' : op.value)}
+                            className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-all ${ordenarPor === op.value ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-gray-50 text-gray-600 border-gray-200 hover:border-indigo-300 hover:text-indigo-600'}`}>
+                            {op.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    {(filtroArea || filtroModalidad || ordenarPor) && (
+                      <button onClick={() => { setFiltroArea(''); setFiltroModalidad(''); setOrdenarPor('') }}
+                        className="text-xs text-indigo-500 hover:text-indigo-700 font-semibold text-left">
+                        Limpiar filtros
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

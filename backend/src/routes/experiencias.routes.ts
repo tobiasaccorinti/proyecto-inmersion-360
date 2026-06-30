@@ -25,6 +25,7 @@ router.get('/mias', authenticate, requireRole('empresa'), experienciasController
 router.get('/recomendadas/para-mi', authenticate, requireRole('estudiante'), experienciasController.recomendadas)
 router.get('/:id', experienciasController.obtener)
 router.post('/', authenticate, requireRole('empresa'), createExperienciaValidation, experienciasController.crear)
+router.put('/:id', authenticate, requireRole('empresa'), experienciasController.actualizar)
 router.patch('/:id/estado', authenticate, requireRole('empresa'), experienciasController.actualizarEstado)
 router.get('/:experienciaId/inscripciones', authenticate, requireRole('empresa'), inscripcionesController.listarDeExperiencia)
 

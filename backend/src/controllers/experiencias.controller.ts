@@ -91,6 +91,15 @@ export const experienciasController = {
     }
   },
 
+  async actualizar(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data = await experienciasService.actualizar(req.params.id, req.user!.sub, req.body)
+      res.json(data)
+    } catch (err) {
+      next(err)
+    }
+  },
+
   async actualizarEstado(req: Request, res: Response, next: NextFunction) {
     try {
       const data = await experienciasService.actualizarEstado(req.params.id, req.user!.sub, req.body.estado)
