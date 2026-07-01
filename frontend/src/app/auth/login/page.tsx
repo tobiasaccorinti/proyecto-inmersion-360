@@ -7,9 +7,9 @@ import Link from 'next/link'
  */
 
 const stats = [
-  { num: '120+', label: 'experiencias' },
-  { num: '4.500', label: 'estudiantes' },
-  { num: '25', label: 'empresas' },
+  { num: '320+', label: 'experiencias' },
+  { num: '15.000+', label: 'estudiantes' },
+  { num: '80+', label: 'empresas' },
 ]
 
 export default function LoginPage() {

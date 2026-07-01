@@ -20,5 +20,6 @@ router.get('/mios', authenticate, requireRole('estudiante'), feedbackController.
 router.get('/empresa/resumen', authenticate, requireRole('empresa'), feedbackController.resumenEmpresa)
 router.get('/empresa/:experienciaId', authenticate, requireRole('empresa'), feedbackController.listarDeExperiencia)
 router.get('/institucion/resumen', authenticate, requireRole('institucion'), feedbackController.resumenInstitucion)
+router.get('/institucion/:experienciaId', authenticate, requireRole('institucion'), feedbackController.listarDeExperienciaInstitucion)
 
 export default router

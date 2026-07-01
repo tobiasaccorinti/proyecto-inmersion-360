@@ -17,4 +17,8 @@ export const feedbackService = {
   async resumenInstitucion(token: string): Promise<Feedback[]> {
     return apiRequest<Feedback[]>('/feedback/institucion/resumen', { token })
   },
+
+  async listarDeExperienciaInstitucion(experienciaId: string, token: string): Promise<Feedback[]> {
+    return apiRequest<Feedback[]>(`/feedback/institucion/${experienciaId}`, { token })
+  },
 }

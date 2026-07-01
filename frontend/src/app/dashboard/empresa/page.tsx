@@ -267,7 +267,7 @@ export default function DashboardEmpresaPage() {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {experiencias.map((exp) => (
-                  <div key={exp.id} className="relative group">
+                  <div key={exp.id} className="relative group h-full">
                     <ExperienciaCard experiencia={exp} mostrarEstado onClick={() => {}} />
                     <button
                       onClick={() => setEditando(exp)}

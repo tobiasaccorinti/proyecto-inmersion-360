@@ -7,7 +7,7 @@
 
 import { AREA_EMOJI, AREA_GRADIENT, AREA_BADGE } from '../utils/constants'
 import { formatDate, formatDuration } from '../utils/helpers'
-import type { Experiencia } from '../types'
+import type { Experiencia, Feedback } from '../types'
 
 interface ExperienciaModalProps {
   experiencia: Experiencia
@@ -15,8 +15,8 @@ interface ExperienciaModalProps {
   inscribiendo: boolean
   onClose: () => void
   onInscribir: (id: string) => void
-  /** Si es true, no muestra el botón de inscripción (vista empresa/institución) */
   soloLectura?: boolean
+  feedbacks?: Feedback[]
 }
 
 export function ExperienciaModal({
@@ -26,6 +26,7 @@ export function ExperienciaModal({
   onClose,
   onInscribir,
   soloLectura = false,
+  feedbacks,
 }: ExperienciaModalProps) {
   const gradient = AREA_GRADIENT[experiencia.area] ?? 'from-indigo-100 to-indigo-50'
   const badge = AREA_BADGE[experiencia.area] ?? 'bg-gray-50 text-gray-600'
@@ -96,6 +97,52 @@ export function ExperienciaModal({
               >
                 Ver grabación →
               </a>
+            </div>
+          )}
+
+          {/* Reseñas */}
+          {feedbacks && (
+            <div className="mb-4">
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                Reseñas de estudiantes
+              </p>
+              {feedbacks.length === 0 ? (
+                <p className="text-sm text-gray-400 italic">Todavía no hay reseñas para esta experiencia.</p>
+              ) : (
+                <>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-2xl font-bold text-amber-500">
+                      {(feedbacks.reduce((s, f) => s + f.calificacion, 0) / feedbacks.length).toFixed(1)}
+                    </span>
+                    <div>
+                      <div className="flex gap-0.5">
+                        {[1,2,3,4,5].map((n) => {
+                          const avg = feedbacks.reduce((s, f) => s + f.calificacion, 0) / feedbacks.length
+                          return <span key={n} className={`text-sm ${n <= Math.round(avg) ? 'text-amber-400' : 'text-gray-200'}`}>★</span>
+                        })}
+                      </div>
+                      <p className="text-xs text-gray-400">{feedbacks.length} reseña{feedbacks.length !== 1 ? 's' : ''}</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2 max-h-40 overflow-y-auto">
+                    {feedbacks.map((fb, idx) => (
+                      <div key={idx} className="bg-gray-50 rounded-xl px-3 py-2">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-xs font-semibold text-gray-700">
+                            {(fb.profiles as { full_name?: string } | null)?.full_name ?? 'Estudiante'}
+                          </span>
+                          <div className="flex gap-0.5">
+                            {[1,2,3,4,5].map((n) => (
+                              <span key={n} className={`text-xs ${n <= fb.calificacion ? 'text-amber-400' : 'text-gray-200'}`}>★</span>
+                            ))}
+                          </div>
+                        </div>
+                        {fb.comentario && <p className="text-xs text-gray-500 italic">&ldquo;{fb.comentario}&rdquo;</p>}
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           )}
 

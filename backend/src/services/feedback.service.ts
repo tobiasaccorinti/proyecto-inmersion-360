@@ -79,6 +79,18 @@ export const feedbackService = {
     return data ?? []
   },
 
+  /** Devuelve feedbacks de una experiencia para una institución (sin verificar ownership) */
+  async listarDeExperienciaInstitucion(experienciaId: string) {
+    const supabase = getSupabase()
+    const { data, error } = await supabase
+      .from('feedbacks')
+      .select('*, profiles(full_name)')
+      .eq('experiencia_id', experienciaId)
+      .order('created_at', { ascending: false })
+    if (error) throw createError(error.message, 500)
+    return data ?? []
+  },
+
   /** Devuelve resumen de feedback de todas las experiencias de una empresa */
   async resumenDeEmpresa(empresaId: string) {
     const supabase = getSupabase()

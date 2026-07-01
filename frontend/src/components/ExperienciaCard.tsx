@@ -42,12 +42,12 @@ export function ExperienciaCard({
   return (
     <div
       onClick={() => onClick(experiencia)}
-      className="bg-white rounded-2xl border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition-all"
+      className="bg-white rounded-2xl border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition-all h-full flex flex-col"
     >
-      <div className={`h-36 flex items-center justify-center bg-gradient-to-br ${gradient}`}>
+      <div className={`h-36 flex-shrink-0 flex items-center justify-center bg-gradient-to-br ${gradient}`}>
         <span className="text-5xl">{emoji}</span>
       </div>
-      <div className="p-5">
+      <div className="p-5 flex flex-col flex-1">
         <div className="flex items-center justify-between mb-2">
           <span className={`text-sm font-medium px-2.5 py-1 rounded-full ${badge}`}>
             {experiencia.area}
@@ -75,8 +75,10 @@ export function ExperienciaCard({
             <ReputacionBadge rep={reputacion} />
           </div>
         )}
-        <p className="text-sm text-gray-400 mt-2">{formatDate(experiencia.fecha)}</p>
-        <p className="text-sm text-gray-400 capitalize">{experiencia.modalidad}</p>
+        <div className="mt-auto pt-3">
+          <p className="text-sm text-gray-400">{formatDate(experiencia.fecha)}</p>
+          <p className="text-sm text-gray-400 capitalize">{experiencia.modalidad}</p>
+        </div>
       </div>
     </div>
   )

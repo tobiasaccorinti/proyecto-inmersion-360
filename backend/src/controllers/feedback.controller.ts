@@ -32,6 +32,13 @@ export const feedbackController = {
     } catch (err) { next(err) }
   },
 
+  async listarDeExperienciaInstitucion(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data = await feedbackService.listarDeExperienciaInstitucion(req.params.experienciaId)
+      res.json(data)
+    } catch (err) { next(err) }
+  },
+
   async resumenInstitucion(req: Request, res: Response, next: NextFunction) {
     try {
       const data = await feedbackService.resumenDeInstitucion(req.user!.sub)

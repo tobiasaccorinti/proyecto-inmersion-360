@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Sidebar, type NavItem } from '@/components/Sidebar'
 import { ExperienciaCard } from '@/components/ExperienciaCard'
+import { ExperienciaModal } from '@/components/ExperienciaModal'
 import { experienciasService } from '@/services/experienciasService'
 import { institucionesService } from '@/services/institucionesService'
 import { authService } from '@/services/authService'
@@ -46,6 +47,8 @@ export default function DashboardInstitucionPage() {
   const [filtroModalidad, setFiltroModalidad] = useState('')
   const [ordenarPor, setOrdenarPor] = useState('')
   const [filtrosAbiertos, setFiltrosAbiertos] = useState(false)
+  const [detalle, setDetalle] = useState<Experiencia | null>(null)
+  const [detalleFeedbacks, setDetalleFeedbacks] = useState<Feedback[]>([])
   const [cantidad, setCantidad] = useState(10)
   const [cuposModal, setCuposModal] = useState(10)
 
@@ -134,6 +137,17 @@ export default function DashboardInstitucionPage() {
     })
   }
 
+  async function handleAbrirDetalle(exp: Experiencia) {
+    setDetalle(exp)
+    setDetalleFeedbacks([])
+    if (token) {
+      try {
+        const fbs = await feedbackService.listarDeExperienciaInstitucion(exp.id, token)
+        setDetalleFeedbacks(fbs)
+      } catch { /* sin reseñas */ }
+    }
+  }
+
   function handleLogout() {
     localStorage.removeItem('inspira_token')
     router.push('/auth/login')
@@ -162,6 +176,17 @@ export default function DashboardInstitucionPage() {
 
   return (
     <div className="min-h-screen bg-[#EEEFFE] flex flex-col md:flex-row" style={{ fontFamily: 'var(--font-body, sans-serif)' }}>
+      {detalle && (
+        <ExperienciaModal
+          experiencia={detalle}
+          soloLectura
+          yaInscripto={false}
+          inscribiendo={false}
+          onClose={() => { setDetalle(null); setDetalleFeedbacks([]) }}
+          onInscribir={() => {}}
+          feedbacks={detalleFeedbacks}
+        />
+      )}
       {/* Modal habilitar/deshabilitar experiencia */}
       {seleccionada && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-6">
@@ -335,7 +360,7 @@ export default function DashboardInstitucionPage() {
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                   {filtradas.map((exp) => (
-                    <div key={exp.id} className="relative">
+                    <div key={exp.id} className="relative group h-full">
                       <ExperienciaCard
                         experiencia={exp}
                         mostrarEstado
@@ -345,6 +370,15 @@ export default function DashboardInstitucionPage() {
                       <div className="absolute top-2 right-2 bg-indigo-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
                         ✨ Rec.
                       </div>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); handleAbrirDetalle(exp) }}
+                        className="absolute bottom-3 right-3 w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-indigo-50 border border-gray-100"
+                        title="Ver detalles"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-indigo-600">
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                        </svg>
+                      </button>
                     </div>
                   ))}
                 </div>
@@ -430,7 +464,7 @@ export default function DashboardInstitucionPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {expFiltradas.map((exp) => (
-                <div key={exp.id} className="relative">
+                <div key={exp.id} className="relative group h-full">
                   <ExperienciaCard
                     experiencia={exp}
                     mostrarEstado
@@ -442,6 +476,15 @@ export default function DashboardInstitucionPage() {
                       Habilitada
                     </div>
                   )}
+                  <button
+                    onClick={(e) => { e.stopPropagation(); handleAbrirDetalle(exp) }}
+                    className="absolute bottom-3 right-3 w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-indigo-50 border border-gray-100"
+                    title="Ver detalles"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-indigo-600">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                    </svg>
+                  </button>
                 </div>
               ))}
             </div>
